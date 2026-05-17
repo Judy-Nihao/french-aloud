@@ -40,6 +40,8 @@ yarn-error.log*
 .vercel
 
 # agent / skill files
+AGENTS.md
+CLAUDE.md
 /.agents/
 /.claude/
 skills-lock.json
