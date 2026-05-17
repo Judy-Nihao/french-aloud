@@ -17,6 +17,18 @@ const voiceOptions: Array<{ label: string; value: VoiceType }> = [
   { label: "Male voice", value: "male" },
 ];
 
+const getCacheMessage = (cacheStatus: string | null) => {
+  if (cacheStatus === "HIT") {
+    return "Using the cached audio.";
+  }
+
+  if (cacheStatus === "MISS") {
+    return "Calling the TTS API and caching the audio.";
+  }
+
+  return "Cache status unavailable.";
+};
+
 export const TestIntegrationPanel = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [text, setText] = useState(
@@ -71,7 +83,7 @@ export const TestIntegrationPanel = () => {
       await audio.play();
       setTtsState("success");
       setTtsMessage(
-        `TTS succeeded with ${voice} voice. Audio is playing. Cache: ${cacheStatus ?? "UNKNOWN"}.`,
+        `TTS succeeded with ${voice} voice. ${getCacheMessage(cacheStatus)}`,
       );
     } catch (error) {
       setTtsState("error");

@@ -13,56 +13,6 @@ const Home = () => {
           A minimal starter for Supabase + ElevenLabs Text-to-Speech
           integration.
         </p>
-
-        <div className="mt-8 space-y-4 text-slate-700">
-          <p>
-            Use{" "}
-            <code className="rounded bg-slate-100 px-2 py-1 text-sm">
-              /app/api/tts
-            </code>{" "}
-            to send text to ElevenLabs, and use the Supabase client in{" "}
-            <code className="rounded bg-slate-100 px-2 py-1 text-sm">
-              lib/supabase
-            </code>
-            .
-          </p>
-          <ul className="list-disc space-y-2 pl-5">
-            <li>
-              Store Supabase keys in{" "}
-              <code className="rounded bg-slate-100 px-2 py-1 text-sm">
-                NEXT_PUBLIC_SUPABASE_URL
-              </code>{" "}
-              and{" "}
-              <code className="rounded bg-slate-100 px-2 py-1 text-sm">
-                NEXT_PUBLIC_SUPABASE_ANON_KEY
-              </code>
-              .
-            </li>
-            <li>
-              Set{" "}
-              <code className="rounded bg-slate-100 px-2 py-1 text-sm">
-                ELEVENLABS_API_KEY
-              </code>{" "}
-              and{" "}
-              <code className="rounded bg-slate-100 px-2 py-1 text-sm">
-                ELEVENLABS_VOICE_ID
-              </code>
-              .
-            </li>
-            <li>
-              Tailwind CSS is enabled through{" "}
-              <code className="rounded bg-slate-100 px-2 py-1 text-sm">
-                postcss.config.mjs
-              </code>{" "}
-              and{" "}
-              <code className="rounded bg-slate-100 px-2 py-1 text-sm">
-                app/globals.css
-              </code>
-              .
-            </li>
-          </ul>
-        </div>
-
         <TestIntegrationPanel />
       </div>
     </main>
