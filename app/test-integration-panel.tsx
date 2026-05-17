@@ -237,7 +237,7 @@ export const TestIntegrationPanel = () => {
           id="card-image"
           type="file"
           accept="image/*"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-800 hover:file:bg-slate-200 focus:outline-none focus:ring-4 focus:ring-slate-200"
+          className="w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-800 hover:file:bg-slate-200 focus:outline-none focus:ring-4 focus:ring-slate-200"
           onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
         />
       </div>
