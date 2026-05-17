@@ -1,6 +1,10 @@
 # French Aloud
 
-French Aloud is a small web app for collecting French words and sentences with images, then listening to them through realistic text-to-speech audio.
+Live demo: https://french-aloud.vercel.app/
+
+French Aloud is a compact web app for collecting French words and sentences with optional images, then listening to them through natural-sounding text-to-speech audio.
+
+It is currently a minimal integration test of the core flow.
 
 The project explores a simple full-stack flow: users can create a phrase card, optionally attach an image, save the card to Supabase, and play the French text aloud through a server-side TTS API route.
 
