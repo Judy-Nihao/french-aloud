@@ -294,7 +294,6 @@ export const TestIntegrationPanel = () => {
               {createdCard.content}
             </p>
             <div className="flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-              <span>ID: {createdCard.id}</span>
               <button
                 type="button"
                 className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200"
