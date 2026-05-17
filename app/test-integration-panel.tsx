@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { X } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
 type CheckState = "idle" | "loading" | "success" | "error";
@@ -31,6 +32,7 @@ const getCacheMessage = (cacheStatus: string | null) => {
 
 export const TestIntegrationPanel = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [text, setText] = useState(
     "J’apprends le français parce que j’aime trop comment ça sonne.",
   );
@@ -45,6 +47,17 @@ export const TestIntegrationPanel = () => {
   const [cardState, setCardState] = useState<CheckState>("idle");
   const [cardMessage, setCardMessage] = useState("No test card created yet");
   const [createdCard, setCreatedCard] = useState<CreatedCard | null>(null);
+
+  const resizeTextarea = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+
+  useEffect(() => {
+    resizeTextarea();
+  }, [text]);
 
   const playText = async (phrase: string) => {
     if (!phrase) {
@@ -167,8 +180,7 @@ export const TestIntegrationPanel = () => {
 
       setCreatedCard(card);
       setCardState("success");
-      setCardMessage("Card saved to Supabase. Playing the audio...");
-      await playText(content);
+      setCardMessage("Card saved to Supabase. Play the audio when ready.");
     } catch (error) {
       setCardState("error");
       setCardMessage(
@@ -198,9 +210,16 @@ export const TestIntegrationPanel = () => {
         </label>
         <textarea
           id="tts-text"
-          className="min-h-24 resize-y rounded-xl border border-slate-300 bg-white px-3 py-3 text-base leading-6 text-slate-950 outline-none transition focus:border-slate-500 focus:ring-4 focus:ring-slate-200"
+          ref={textareaRef}
+          className="min-h-24 w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-3 text-base leading-6 text-slate-950 transition outline-none focus:border-slate-500 focus:ring-4 focus:ring-slate-200"
+          style={{ overflow: "hidden" }}
           value={text}
-          onChange={(event) => setText(event.target.value)}
+          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+            setText(event.target.value);
+            const textarea = event.target;
+            textarea.style.height = "auto";
+            textarea.style.height = `${textarea.scrollHeight}px`;
+          }}
         />
       </div>
 
@@ -225,7 +244,22 @@ export const TestIntegrationPanel = () => {
           ))}
         </div>
       </fieldset>
-
+      <button
+        type="button"
+        className="mt-4 w-full cursor-pointer rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 focus:ring-4 focus:ring-slate-300 focus:outline-none disabled:cursor-not-allowed disabled:bg-slate-400"
+        onClick={testTts}
+        disabled={ttsState === "loading"}
+      >
+        {ttsState === "loading" ? "Playing..." : "Test pronunciation"}
+      </button>
+      <button
+        type="button"
+        className="mt-4 w-full cursor-pointer rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none disabled:cursor-not-allowed disabled:text-slate-400"
+        onClick={testSupabase}
+        disabled={supabaseState === "loading"}
+      >
+        {supabaseState === "loading" ? "Checking..." : "Test Supabase"}
+      </button>
       <div className="mt-4 grid gap-3">
         <label
           className="text-sm font-medium text-slate-700"
@@ -237,7 +271,7 @@ export const TestIntegrationPanel = () => {
           id="card-image"
           type="file"
           accept="image/*"
-          className="w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-800 hover:file:bg-slate-200 focus:outline-none focus:ring-4 focus:ring-slate-200"
+          className="w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-800 hover:file:bg-slate-200 focus:ring-4 focus:ring-slate-200 focus:outline-none"
           onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
         />
       </div>
@@ -245,23 +279,7 @@ export const TestIntegrationPanel = () => {
       <div className="mt-4 flex flex-col gap-3 sm:flex-row">
         <button
           type="button"
-          className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-300 disabled:cursor-not-allowed disabled:bg-slate-400"
-          onClick={testTts}
-          disabled={ttsState === "loading"}
-        >
-          {ttsState === "loading" ? "Playing..." : "Test pronunciation"}
-        </button>
-        <button
-          type="button"
-          className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:cursor-not-allowed disabled:text-slate-400"
-          onClick={testSupabase}
-          disabled={supabaseState === "loading"}
-        >
-          {supabaseState === "loading" ? "Checking..." : "Test Supabase"}
-        </button>
-        <button
-          type="button"
-          className="rounded-xl bg-blue-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="w-full cursor-pointer rounded-xl bg-blue-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 focus:outline-none disabled:cursor-not-allowed disabled:bg-slate-400"
           onClick={createVoiceCard}
           disabled={cardState === "loading"}
         >
@@ -280,7 +298,7 @@ export const TestIntegrationPanel = () => {
       </div>
 
       {createdCard ? (
-        <article className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <article className="relative mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white">
           {createdCard.image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -289,17 +307,29 @@ export const TestIntegrationPanel = () => {
               alt=""
             />
           ) : null}
+          <button
+            type="button"
+            className="absolute top-3 right-3 grid h-9 w-9 cursor-pointer place-items-center rounded-full border border-slate-300 bg-white text-slate-600 transition hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none"
+            onClick={() => {
+              setCreatedCard(null);
+              setCardState("idle");
+              setCardMessage("No test card created yet");
+            }}
+            aria-label="Reset created card"
+          >
+            <X className="h-4 w-4" />
+          </button>
           <div className="grid gap-3 p-4">
-            <p className="text-lg font-medium leading-7 text-slate-950">
+            <p className="text-lg leading-7 font-medium text-slate-950">
               {createdCard.content}
             </p>
             <div className="flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
               <button
                 type="button"
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200"
+                className="w-full cursor-pointer rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none"
                 onClick={() => playText(createdCard.content)}
               >
-                Play again
+                Play the audio
               </button>
             </div>
           </div>
