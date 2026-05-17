@@ -219,7 +219,7 @@ export const TestIntegrationPanel = () => {
         onClick={testSupabase}
         disabled={supabaseState === "loading"}
       >
-        {supabaseState === "loading" ? "Checking..." : "Test Supabase"}
+        {supabaseState === "loading" ? "Checking..." : "Read Supabase"}
       </button>
       <div className="mt-4 grid gap-3">
         <label
