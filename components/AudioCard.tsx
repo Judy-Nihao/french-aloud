@@ -37,8 +37,8 @@ export const AudioCard = ({ card, voice, onReset }: AudioCardProps) => {
           {card.content}
         </p>
 
-        <div className="flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex-1">
+        <div className="flex flex-col gap-2 text-xs text-slate-500">
+          <div>
             <PlayAudioButton
               idleLabel="Play the audio"
               activeLabel="Playing audio"
@@ -47,7 +47,7 @@ export const AudioCard = ({ card, voice, onReset }: AudioCardProps) => {
             />
           </div>
 
-          <div className="mt-2 sm:mt-0 sm:ml-4">
+          <div className="mt-2">
             <button
               type="button"
               className="w-full cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-center text-sm font-medium text-slate-800 hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none"
