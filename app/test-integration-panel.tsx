@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { X } from "lucide-react";
+import { AudioCard } from "@/components/AudioCard";
+import { PlayAudioButton } from "@/components/PlayAudioButton";
 import { supabase } from "@/lib/supabase/client";
 
 type CheckState = "idle" | "loading" | "success" | "error";
@@ -31,8 +32,8 @@ const getCacheMessage = (cacheStatus: string | null) => {
 };
 
 export const TestIntegrationPanel = () => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [text, setText] = useState(
     "J’apprends le français parce que j’aime trop comment ça sonne.",
   );
@@ -58,55 +59,6 @@ export const TestIntegrationPanel = () => {
   useEffect(() => {
     resizeTextarea();
   }, [text]);
-
-  const playText = async (phrase: string) => {
-    if (!phrase) {
-      setTtsState("error");
-      setTtsMessage("Enter a French word or sentence first");
-      return;
-    }
-
-    setTtsState("loading");
-    setTtsMessage("Calling /api/tts...");
-
-    try {
-      audioRef.current?.pause();
-
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: phrase, voice }),
-      });
-
-      if (!response.ok) {
-        const data = (await response.json().catch(() => null)) as {
-          error?: string;
-        } | null;
-        throw new Error(data?.error ?? `TTS failed with ${response.status}`);
-      }
-
-      const cacheStatus = response.headers.get("X-TTS-Cache");
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-
-      audioRef.current = audio;
-      audio.onended = () => URL.revokeObjectURL(audioUrl);
-
-      await audio.play();
-      setTtsState("success");
-      setTtsMessage(
-        `TTS succeeded with ${voice} voice. ${getCacheMessage(cacheStatus)}`,
-      );
-    } catch (error) {
-      setTtsState("error");
-      setTtsMessage(error instanceof Error ? error.message : "TTS test failed");
-    }
-  };
-
-  const testTts = async () => {
-    await playText(text.trim());
-  };
 
   const testSupabase = async () => {
     setSupabaseState("loading");
@@ -244,14 +196,23 @@ export const TestIntegrationPanel = () => {
           ))}
         </div>
       </fieldset>
-      <button
-        type="button"
-        className="mt-4 w-full cursor-pointer rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 focus:ring-4 focus:ring-slate-300 focus:outline-none disabled:cursor-not-allowed disabled:bg-slate-400"
-        onClick={testTts}
+      <PlayAudioButton
+        idleLabel="Test pronunciation"
+        activeLabel="Playing audio"
+        text={text}
+        voice={voice}
         disabled={ttsState === "loading"}
-      >
-        {ttsState === "loading" ? "Playing..." : "Test pronunciation"}
-      </button>
+        onStatusChange={(state, message) => {
+          setTtsState(
+            state === "loading"
+              ? "loading"
+              : state === "success"
+                ? "success"
+                : "error",
+          );
+          setTtsMessage(message);
+        }}
+      />
       <button
         type="button"
         className="mt-4 w-full cursor-pointer rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none disabled:cursor-not-allowed disabled:text-slate-400"
@@ -269,6 +230,7 @@ export const TestIntegrationPanel = () => {
         </label>
         <input
           id="card-image"
+          ref={fileInputRef}
           type="file"
           accept="image/*"
           className="w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-800 hover:file:bg-slate-200 focus:ring-4 focus:ring-slate-200 focus:outline-none"
@@ -298,42 +260,19 @@ export const TestIntegrationPanel = () => {
       </div>
 
       {createdCard ? (
-        <article className="relative mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          {createdCard.image_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              className="aspect-4/3 w-full object-cover"
-              src={createdCard.image_url}
-              alt=""
-            />
-          ) : null}
-          <button
-            type="button"
-            className="absolute top-3 right-3 grid h-9 w-9 cursor-pointer place-items-center rounded-full border border-slate-300 bg-white text-slate-600 transition hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none"
-            onClick={() => {
-              setCreatedCard(null);
-              setCardState("idle");
-              setCardMessage("No test card created yet");
-            }}
-            aria-label="Reset created card"
-          >
-            <X className="h-4 w-4" />
-          </button>
-          <div className="grid gap-3 p-4">
-            <p className="text-lg leading-7 font-medium text-slate-950">
-              {createdCard.content}
-            </p>
-            <div className="flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-              <button
-                type="button"
-                className="w-full cursor-pointer rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none"
-                onClick={() => playText(createdCard.content)}
-              >
-                Play the audio
-              </button>
-            </div>
-          </div>
-        </article>
+        <AudioCard
+          card={createdCard}
+          voice={voice}
+          onReset={() => {
+            setCreatedCard(null);
+            setCardState("idle");
+            setCardMessage("No test card created yet");
+            setImageFile(null);
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+          }}
+        />
       ) : null}
     </section>
   );
