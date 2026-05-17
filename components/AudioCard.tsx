@@ -50,7 +50,7 @@ export const AudioCard = ({ card, voice, onReset }: AudioCardProps) => {
           <div className="mt-2 sm:mt-0 sm:ml-4">
             <button
               type="button"
-              className="w-full cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-center text-sm font-medium text-slate-800 hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none"
+              className="w-full cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-center text-sm font-medium text-slate-800 hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none"
               onClick={onReset}
             >
               Reset
