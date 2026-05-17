@@ -23,6 +23,9 @@
 # misc
 .DS_Store
 *.pem
+SPEC.md
+SUPABASE_SETUP.md
+DEVELOPMENT_NOTES.md
 
 # debug
 npm-debug.log*
@@ -35,6 +38,11 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# agent / skill files
+/.agents/
+/.claude/
+skills-lock.json
 
 # typescript
 *.tsbuildinfo
