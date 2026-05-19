@@ -56,18 +56,6 @@ The current app includes a small integration panel that can:
 
 TTS responses are cached in server memory for repeated playback of the same text, voice, model, and voice settings. On the first request for a specific text and voice, the app calls the TTS API and caches the audio. On the next identical request, the app reuses the cached audio instead of calling the TTS API again.
 
-## Environment Variables
-
-Create a local `.env.local` file:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-ELEVENLABS_API_KEY=
-ELEVENLABS_FEMALE_VOICE_ID=
-ELEVENLABS_MALE_VOICE_ID=
-```
-
 `NEXT_PUBLIC_SUPABASE_ANON_KEY` is used by the browser-side Supabase client. The ElevenLabs key and voice IDs are read only by the server route.
 
 ## Development
