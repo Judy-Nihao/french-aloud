@@ -88,6 +88,7 @@ const CarouselCard = ({
   onSelect: () => void;
   onDelete?: (id: string) => void;
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
   const colorClasses = COLOR_CLASSES[card.color.name];
   const hasImage = Boolean(card.imageUrl);
   const isLightText = colorClasses.text.startsWith("text-white");
@@ -118,21 +119,26 @@ const CarouselCard = ({
             ? "scale-100 opacity-100 shadow-[0_10px_34px_rgba(28,26,23,0.2),0_3px_10px_rgba(28,26,23,0.08)] duration-[380ms] ease-[cubic-bezier(0.34,1.52,0.64,1)]"
             : "scale-[0.91] opacity-55 shadow-[0_3px_14px_rgba(28,26,23,0.12),0_1px_4px_rgba(28,26,23,0.05)] duration-180 ease-[cubic-bezier(0.16,1,0.3,1)]",
         )}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        {isFocused && onDelete && (
+        {onDelete && (
           <button
             type="button"
             className={cn(
-              "absolute top-3 right-3 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition active:scale-90",
+              "absolute top-3 right-3 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-opacity duration-150 active:scale-90",
+              isHovered ? "opacity-100" : "opacity-0",
               deleteButtonClass,
             )}
             onClick={(e) => {
               e.stopPropagation();
               onDelete(card.id);
             }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
             aria-label={`Delete ${card.french}`}
           >
-            <Trash2 size={14} strokeWidth={1.75} />
+            <X size={14} strokeWidth={2} />
           </button>
         )}
         {hasImage ? (
@@ -207,6 +213,7 @@ const Carousel = ({
   const startIndex = Math.floor(cards.length / 2);
   const [selectedIndex, setSelectedIndex] = useState(startIndex);
   const selectedIndexRef = useRef(startIndex);
+  const sectionRef = useRef<HTMLElement>(null);
   const focusFrame = useRef<number | null>(null);
   const snapLockTimer = useRef<number | null>(null);
   const lockedSnapIndex = useRef<number | null>(null);
@@ -346,7 +353,7 @@ const Carousel = ({
   }, [emblaApi, getClosestSlideIndex, lockSnapTarget, stopFocusTracking]);
 
   const handleWheel = useCallback(
-    (event: React.WheelEvent<HTMLElement>) => {
+    (event: WheelEvent) => {
       if (!emblaApi) return;
       const wheelDelta =
         Math.abs(event.deltaX) > Math.abs(event.deltaY)
@@ -476,13 +483,20 @@ const Carousel = ({
     [stopFocusTracking],
   );
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    section.addEventListener("wheel", handleWheel, { passive: false });
+    return () => section.removeEventListener("wheel", handleWheel);
+  }, [handleWheel]);
+
   return (
     <section
+      ref={sectionRef}
       aria-label="Featured cards"
       className="relative w-full overflow-hidden"
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
-      onWheel={handleWheel}
     >
       <div ref={emblaRef} className="overflow-hidden">
         <div className="flex min-h-[calc(100vh-2rem)] items-center gap-2 sm:gap-3 lg:gap-4">

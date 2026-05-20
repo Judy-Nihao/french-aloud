@@ -1,12 +1,39 @@
 "use client";
 
-import { useState, useRef, type FocusEvent, type FormEvent } from "react";
+import { useState, useRef, useEffect, type FocusEvent, type FormEvent } from "react";
 import { ArrowUp, ImagePlus, X } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import CarouselCards from "./CarouselCards";
-import { DEFAULT_CARDS, CARD_COLORS, type CardData } from "./data";
+import { CARD_COLORS, type CardData } from "./data";
 
 const SHAPE_COUNT = 6;
+const COLOR_COUNT = CARD_COLORS.length;
+
+function stableIndex(id: string, mod: number): number {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  return hash % mod;
+}
+
+type DbRow = {
+  id: string;
+  content: string;
+  translation: string | null;
+  image_url: string | null;
+};
+
+function rowToCard(row: DbRow): CardData {
+  return {
+    id: row.id,
+    french: row.content,
+    english: row.translation ?? undefined,
+    imageUrl: row.image_url,
+    color: CARD_COLORS[stableIndex(row.id, COLOR_COUNT)],
+    shapeIndex: stableIndex(row.id + "shape", SHAPE_COUNT),
+  };
+}
 
 const Input = () => {
   const [french, setFrench] = useState("");
@@ -16,10 +43,22 @@ const Input = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [cards, setCards] = useState<CardData[]>(DEFAULT_CARDS);
+  const [cards, setCards] = useState<CardData[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    supabase
+      .from("cards")
+      .select("id, content, translation, image_url")
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (!error && data) {
+          setCards((data as DbRow[]).map(rowToCard));
+        }
+      });
+  }, []);
 
   const canSubmit = french.trim().length > 0 && !isSubmitting;
 
@@ -73,7 +112,11 @@ const Input = () => {
 
       const { data: savedCard, error: insertError } = await supabase
         .from("cards")
-        .insert({ content: phrase, translation: translation || null, image_url: imageUrl })
+        .insert({
+          content: phrase,
+          translation: translation || null,
+          image_url: imageUrl,
+        })
         .select("id")
         .single();
 
@@ -86,8 +129,8 @@ const Input = () => {
         french: phrase,
         english: translation || undefined,
         imageUrl,
-        color: CARD_COLORS[Math.floor(Math.random() * CARD_COLORS.length)],
-        shapeIndex: Math.floor(Math.random() * SHAPE_COUNT),
+        color: CARD_COLORS[stableIndex(savedCard.id, COLOR_COUNT)],
+        shapeIndex: stableIndex(savedCard.id + "shape", SHAPE_COUNT),
       };
 
       setCards((prev) => [newCard, ...prev]);
@@ -109,9 +152,19 @@ const Input = () => {
     }
   };
 
+  const handleDeleteCard = async (id: string) => {
+    setCards((prev) => prev.filter((card) => card.id !== id));
+    const { error } = await supabase.from("cards").delete().eq("id", id);
+    if (error) console.error(`Failed to delete card: ${error.message}`);
+  };
+
   return (
     <div className="relative">
-      <CarouselCards cards={cards} focusCardId={focusCardId} />
+      <CarouselCards
+        cards={cards}
+        focusCardId={focusCardId}
+        onDeleteCard={handleDeleteCard}
+      />
 
       {isExpanded && (
         <div
@@ -183,7 +236,8 @@ const Input = () => {
                         className="text-fa-bg/55 hover:text-fa-bg hover:bg-fa-bg/15 bg-fa-bg/10 flex min-h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl transition"
                         onClick={() => {
                           setImageFile(null);
-                          if (fileInputRef.current) fileInputRef.current.value = "";
+                          if (fileInputRef.current)
+                            fileInputRef.current.value = "";
                         }}
                         aria-label="Remove image"
                       >
