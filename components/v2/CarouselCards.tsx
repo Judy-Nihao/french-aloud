@@ -2,8 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { Trash2 } from "lucide-react";
-import Header from "./Header";
+import { X } from "lucide-react";
 import PlayPhraseButton from "./PlayPhraseButton";
 import ShapeBlock from "./ShapeBlock";
 import type { CardData } from "./data";
