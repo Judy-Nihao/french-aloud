@@ -116,7 +116,7 @@ const CarouselCard = ({
           "relative mx-auto flex min-h-[min(72vh,35rem)] w-full origin-center transform-gpu flex-col overflow-hidden rounded-2xl transition-[opacity,transform,box-shadow] motion-reduce:transition-none",
           colorClasses.bg,
           isFocused
-            ? "scale-100 opacity-100 shadow-[0_10px_34px_rgba(28,26,23,0.2),0_3px_10px_rgba(28,26,23,0.08)] duration-[380ms] ease-[cubic-bezier(0.34,1.52,0.64,1)]"
+            ? "scale-100 opacity-100 shadow-[0_10px_34px_rgba(28,26,23,0.2),0_3px_10px_rgba(28,26,23,0.08)] duration-380 ease-[cubic-bezier(0.34,1.52,0.64,1)]"
             : "scale-[0.91] opacity-55 shadow-[0_3px_14px_rgba(28,26,23,0.12),0_1px_4px_rgba(28,26,23,0.05)] duration-180 ease-[cubic-bezier(0.16,1,0.3,1)]",
         )}
         onMouseEnter={() => setIsHovered(true)}
@@ -526,7 +526,11 @@ export default function CarouselCards({
 }) {
   return (
     <div className="bg-fa-bg font-ui min-h-screen">
-      <Carousel cards={cards} focusCardId={focusCardId} onDelete={onDeleteCard} />
+      <Carousel
+        cards={cards}
+        focusCardId={focusCardId}
+        onDelete={onDeleteCard}
+      />
     </div>
   );
 }
