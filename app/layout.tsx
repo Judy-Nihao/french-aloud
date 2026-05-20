@@ -6,11 +6,7 @@ export const metadata: Metadata = {
   description: "Supabase and ElevenLabs integration demo.",
 };
 
-const RootLayout = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <body>{children}</body>

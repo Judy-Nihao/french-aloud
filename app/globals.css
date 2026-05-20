@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+/* French Aloud design tokens */
+@theme inline {
+  --font-display: var(--font-playfair, "Playfair Display", Georgia, serif);
+  --font-ui: var(--font-dm-sans, "DM Sans", system-ui, sans-serif);
+  --font-hand: var(--font-caveat, "Caveat", cursive);
+}
+
+@theme {
+  --breakpoint-wide: 75rem; /* 1200px */
+  --color-fa-bg: #F5F0E8;
+  --color-fa-primary: #1C1A17;
+  --color-fa-secondary: #6B6560;
+  --color-fa-accent: #2C4870;
+  --color-fa-card: #FFFFFF;
+  --color-fa-sunset: #E36A3E;
+  --color-fa-dusty: #9FBED0;
+  --color-fa-denim: #597CBA;
+  --color-fa-evergreen: #27694E;
+  --color-fa-chestnut: #A6602B;
+  --color-fa-mustard: #DBBA17;
+}
+
 :root {
   color-scheme: light;
   background-color: #f8fafc;
