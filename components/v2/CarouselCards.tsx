@@ -18,17 +18,14 @@ function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-function frenchTextSizeClass(phrase: string) {
-  if (phrase.length < 10) {
-    return "text-[clamp(2rem,5vw,2.75rem)]";
-  }
+const SHORT_PHRASE_MAX = 10;
+const MEDIUM_PHRASE_MAX = 24;
 
-  if (phrase.length < 24) {
-    return "text-[clamp(1.375rem,4.4vw,1.85rem)]";
-  }
-
+const frenchTextSizeClass = (phrase: string) => {
+  if (phrase.length < SHORT_PHRASE_MAX) return "text-[clamp(2rem,5vw,2.75rem)]";
+  if (phrase.length < MEDIUM_PHRASE_MAX) return "text-[clamp(1.375rem,4.4vw,1.85rem)]";
   return "text-[clamp(1.05rem,3.8vw,1.45rem)]";
-}
+};
 
 const COLOR_CLASSES: Record<
   CardData["color"]["name"],
