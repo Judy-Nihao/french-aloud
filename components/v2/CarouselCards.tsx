@@ -23,7 +23,8 @@ const MEDIUM_PHRASE_MAX = 24;
 
 const frenchTextSizeClass = (phrase: string) => {
   if (phrase.length < SHORT_PHRASE_MAX) return "text-[clamp(2rem,5vw,2.75rem)]";
-  if (phrase.length < MEDIUM_PHRASE_MAX) return "text-[clamp(1.375rem,4.4vw,1.85rem)]";
+  if (phrase.length < MEDIUM_PHRASE_MAX)
+    return "text-[clamp(1.375rem,4.4vw,1.85rem)]";
   return "text-[clamp(1.05rem,3.8vw,1.45rem)]";
 };
 
@@ -110,7 +111,7 @@ const CarouselCard = ({
     >
       <div
         className={cn(
-          "relative mx-auto flex min-h-[min(72vh,35rem)] w-full origin-center transform-gpu flex-col overflow-hidden rounded-2xl transition-[opacity,transform,box-shadow] motion-reduce:transition-none",
+          "relative mx-auto flex h-[min(72vh,35rem)] w-full origin-center transform-gpu flex-col overflow-hidden rounded-2xl transition-[opacity,transform,box-shadow] motion-reduce:transition-none",
           colorClasses.bg,
           isFocused
             ? "scale-100 opacity-100 shadow-[0_10px_34px_rgba(28,26,23,0.2),0_3px_10px_rgba(28,26,23,0.08)] duration-380 ease-[cubic-bezier(0.34,1.52,0.64,1)]"
@@ -139,8 +140,8 @@ const CarouselCard = ({
           </button>
         )}
         {hasImage ? (
-          <div className="p-4">
-            <div className="aspect-square w-full">
+          <div className="h-[60%] flex-none p-4">
+            <div className="h-full w-full">
               <ShapeBlock
                 shapeIndex={card.shapeIndex}
                 color={card.color.hex}
@@ -151,7 +152,7 @@ const CarouselCard = ({
         ) : null}
         <div
           className={cn(
-            "flex flex-1 flex-col px-5 pt-1 pb-6",
+            "flex flex-1 flex-col overflow-hidden px-5 pt-2 pb-6",
             hasImage ? "" : "py-8 text-center",
           )}
         >
@@ -176,7 +177,7 @@ const CarouselCard = ({
             {card.english && (
               <p
                 className={cn(
-                  "font-hand mt-3 text-center text-2xl",
+                  "font-hand mt-3 text-center text-2xl leading-tight",
                   colorClasses.annotation,
                 )}
               >

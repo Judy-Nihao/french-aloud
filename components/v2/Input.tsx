@@ -35,6 +35,25 @@ function rowToCard(row: DbRow): CardData {
   };
 }
 
+function dedupeAdjacentColors(cards: CardData[]): CardData[] {
+  const result: CardData[] = [];
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    const prev = result[i - 1];
+    if (!prev || card.color.name !== prev.color.name) {
+      result.push(card);
+      continue;
+    }
+    const idx = CARD_COLORS.findIndex((c) => c.name === card.color.name);
+    let next = (idx + 1) % CARD_COLORS.length;
+    if (CARD_COLORS[next].name === prev.color.name) {
+      next = (next + 1) % CARD_COLORS.length;
+    }
+    result.push({ ...card, color: CARD_COLORS[next] });
+  }
+  return result;
+}
+
 const Input = () => {
   const [french, setFrench] = useState("");
   const [english, setEnglish] = useState("");
@@ -55,7 +74,7 @@ const Input = () => {
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
         if (!error && data) {
-          setCards((data as DbRow[]).map(rowToCard));
+          setCards(dedupeAdjacentColors((data as DbRow[]).map(rowToCard)));
         }
       });
   }, []);
@@ -133,7 +152,7 @@ const Input = () => {
         shapeIndex: stableIndex(savedCard.id + "shape", SHAPE_COUNT),
       };
 
-      setCards((prev) => [newCard, ...prev]);
+      setCards((prev) => dedupeAdjacentColors([newCard, ...prev]));
       setFocusCardId(newCard.id);
       setFrench("");
       setEnglish("");
@@ -153,7 +172,7 @@ const Input = () => {
   };
 
   const handleDeleteCard = async (id: string) => {
-    setCards((prev) => prev.filter((card) => card.id !== id));
+    setCards((prev) => dedupeAdjacentColors(prev.filter((card) => card.id !== id)));
     const { error } = await supabase.from("cards").delete().eq("id", id);
     if (error) console.error(`Failed to delete card: ${error.message}`);
   };
