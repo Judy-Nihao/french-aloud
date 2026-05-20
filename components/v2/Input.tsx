@@ -126,7 +126,7 @@ const Input = () => {
           onFocus={() => setIsExpanded(true)}
           onBlur={handleFormBlur}
         >
-          <div className="border-fa-bg/10 bg-fa-primary/95 flex flex-col gap-2 overflow-hidden rounded-3xl border p-3 shadow-[0_12px_40px_rgba(28,26,23,0.28)] backdrop-blur-md duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+          <div className="border-fa-bg/10 bg-fa-primary/95 flex flex-col overflow-hidden rounded-3xl border p-3 shadow-[0_12px_40px_rgba(28,26,23,0.28)] backdrop-blur-md duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
             <input
               ref={inputRef}
               value={french}
@@ -142,7 +142,7 @@ const Input = () => {
               }`}
             >
               <div className="min-h-0 overflow-hidden">
-                <div className="flex flex-col gap-2 pt-1">
+                <div className="flex flex-col gap-2 pt-2">
                   <input
                     value={english}
                     onChange={(e) => setEnglish(e.target.value)}
