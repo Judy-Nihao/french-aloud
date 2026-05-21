@@ -198,13 +198,13 @@ const Input = () => {
           onFocus={() => setIsExpanded(true)}
           onBlur={handleFormBlur}
         >
-          <div className="border-fa-bg/10 bg-fa-primary/95 flex flex-col overflow-hidden rounded-3xl border p-3 shadow-[0_12px_40px_rgba(28,26,23,0.28)] backdrop-blur-md duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+          <div className="border-fa-bg/10 bg-fa-primary/95 flex flex-col overflow-hidden rounded-[2.5rem] border p-3 shadow-[0_12px_40px_rgba(28,26,23,0.28)] backdrop-blur-md duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
             <input
               ref={inputRef}
               value={french}
               onChange={(e) => setFrench(e.target.value)}
               placeholder="Read some French aloud for me"
-              className="text-fa-bg/90 caret-fa-bg/70 placeholder:text-fa-bg/35 bg-fa-bg/10 focus:bg-fa-bg/15 min-h-11 w-full min-w-0 rounded-xl px-4 text-sm transition outline-none"
+              className="text-fa-bg/90 caret-fa-bg/70 placeholder:text-fa-bg/35 bg-fa-bg/10 focus:bg-fa-bg/15 min-h-11 w-full min-w-0 rounded-full px-4 text-sm transition outline-none"
             />
             <div
               className={`grid transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -220,7 +220,7 @@ const Input = () => {
                     onChange={(e) => setEnglish(e.target.value)}
                     placeholder="English"
                     tabIndex={isExpanded ? 0 : -1}
-                    className="text-fa-bg/85 caret-fa-bg/70 placeholder:text-fa-bg/35 bg-fa-bg/10 focus:bg-fa-bg/15 min-h-11 min-w-0 rounded-xl px-4 text-sm transition outline-none"
+                    className="text-fa-bg/85 caret-fa-bg/70 placeholder:text-fa-bg/35 bg-fa-bg/10 focus:bg-fa-bg/15 min-h-11 min-w-0 rounded-full px-4 text-sm transition outline-none"
                   />
                   <input
                     ref={fileInputRef}
@@ -236,7 +236,7 @@ const Input = () => {
                     <button
                       type="button"
                       tabIndex={isExpanded ? 0 : -1}
-                      className="text-fa-bg/80 hover:bg-fa-bg/15 bg-fa-bg/10 flex min-h-11 flex-1 cursor-pointer items-center gap-2 rounded-xl px-4 text-sm transition"
+                      className="text-fa-bg/80 hover:bg-fa-bg/15 bg-fa-bg/10 flex min-h-11 flex-1 cursor-pointer items-center gap-2 rounded-full px-4 text-sm transition"
                       onClick={() => {
                         setIsExpanded(true);
                         fileInputRef.current?.click();
@@ -252,7 +252,7 @@ const Input = () => {
                       <button
                         type="button"
                         tabIndex={isExpanded ? 0 : -1}
-                        className="text-fa-bg/55 hover:text-fa-bg hover:bg-fa-bg/15 bg-fa-bg/10 flex min-h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl transition"
+                        className="text-fa-bg/55 hover:text-fa-bg hover:bg-fa-bg/15 bg-fa-bg/10 flex min-h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full transition"
                         onClick={() => {
                           setImageFile(null);
                           if (fileInputRef.current)
@@ -269,7 +269,7 @@ const Input = () => {
                     tabIndex={isExpanded ? 0 : -1}
                     disabled={!canSubmit}
                     aria-label="Add card"
-                    className={`flex min-h-11 w-full cursor-pointer items-center justify-center rounded-xl text-sm font-medium transition ${
+                    className={`flex min-h-11 w-full cursor-pointer items-center justify-center rounded-full text-sm font-medium transition ${
                       canSubmit
                         ? "bg-fa-bg text-fa-primary hover:brightness-95 active:scale-[0.98]"
                         : "bg-fa-bg/15 text-fa-bg/30 cursor-not-allowed"
