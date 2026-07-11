@@ -9,13 +9,13 @@ const VoiceContext = createContext<{
   setVoice: (v: Voice) => void;
 }>({ voice: "female", setVoice: () => {} });
 
-export function VoiceProvider({ children }: { children: ReactNode }) {
+export const VoiceProvider = ({ children }: { children: ReactNode }) => {
   const [voice, setVoice] = useState<Voice>("female");
   return (
     <VoiceContext.Provider value={{ voice, setVoice }}>
       {children}
     </VoiceContext.Provider>
   );
-}
+};
 
 export const useVoice = () => useContext(VoiceContext);

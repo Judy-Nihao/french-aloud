@@ -13,12 +13,12 @@ type Props = {
   className?: string;
 };
 
-export default function PlayPhraseButton({
+const PlayPhraseButton = ({
   text,
   iconClassName = "",
   iconSize = 20,
   className = "",
-}: Props) {
+}: Props) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [state, setState] = useState<"idle" | "loading" | "playing" | "error">(
     "idle",
@@ -106,4 +106,6 @@ export default function PlayPhraseButton({
       />
     </button>
   );
-}
+};
+
+export default PlayPhraseButton;

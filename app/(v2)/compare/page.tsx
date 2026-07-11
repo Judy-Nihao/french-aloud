@@ -5,11 +5,13 @@ export const metadata = {
   title: "French Aloud — Design Compare",
 };
 
-export default function V2Page() {
+const V2Page = () => {
   return (
     <>
       <VoiceSwitch />
       <Input />
     </>
   );
-}
+};
+
+export default V2Page;

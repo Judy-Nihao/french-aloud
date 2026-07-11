@@ -14,9 +14,9 @@ const DRAG_THRESHOLD = 18;
 const FOCUS_RELEASE_DISTANCE = 78;
 const SNAP_LOCK_DURATION = 360;
 
-function cn(...classes: Array<string | false | null | undefined>) {
+const cn = (...classes: Array<string | false | null | undefined>) => {
   return classes.filter(Boolean).join(" ");
-}
+};
 
 const SHORT_PHRASE_MAX = 10;
 const MEDIUM_PHRASE_MAX = 24;
@@ -517,7 +517,7 @@ const Carousel = ({
   );
 };
 
-export default function CarouselCards({
+const CarouselCards = ({
   cards,
   focusCardId = null,
   currentUserId = null,
@@ -527,7 +527,7 @@ export default function CarouselCards({
   focusCardId?: string | null;
   currentUserId?: string | null;
   onDeleteCard?: (id: string) => void;
-}) {
+}) => {
   return (
     <div className="bg-fa-bg font-ui min-h-screen">
       <Carousel
@@ -538,4 +538,6 @@ export default function CarouselCards({
       />
     </div>
   );
-}
+};
+
+export default CarouselCards;

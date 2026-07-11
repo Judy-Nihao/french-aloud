@@ -10,12 +10,12 @@ type Props = {
   className?: string;
 };
 
-export default function ShapeBlock({
+const ShapeBlock = ({
   shapeIndex,
   color,
   imageSrc,
   className = "",
-}: Props) {
+}: Props) => {
   const uid = useId();
   const shape = CARD_SHAPES[shapeIndex % CARD_SHAPES.length];
   const [vbX, vbY, vbW, vbH] = shape.viewBox.split(" ").map(Number);
@@ -60,4 +60,6 @@ export default function ShapeBlock({
       </svg>
     </div>
   );
-}
+};
+
+export default ShapeBlock;

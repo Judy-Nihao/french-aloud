@@ -15,13 +15,13 @@ import { CARD_COLORS, type CardData } from "./data";
 const SHAPE_COUNT = 6;
 const COLOR_COUNT = CARD_COLORS.length;
 
-function stableIndex(id: string, mod: number): number {
+const stableIndex = (id: string, mod: number): number => {
   let hash = 0;
   for (let i = 0; i < id.length; i++) {
     hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
   }
   return hash % mod;
-}
+};
 
 type DbRow = {
   id: string;
@@ -31,7 +31,7 @@ type DbRow = {
   image_url: string | null;
 };
 
-function rowToCard(row: DbRow): CardData {
+const rowToCard = (row: DbRow): CardData => {
   return {
     id: row.id,
     userId: row.user_id,
@@ -41,9 +41,9 @@ function rowToCard(row: DbRow): CardData {
     color: CARD_COLORS[stableIndex(row.id, COLOR_COUNT)],
     shapeIndex: stableIndex(row.id + "shape", SHAPE_COUNT),
   };
-}
+};
 
-function dedupeAdjacentColors(cards: CardData[]): CardData[] {
+const dedupeAdjacentColors = (cards: CardData[]): CardData[] => {
   const result: CardData[] = [];
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
@@ -60,7 +60,7 @@ function dedupeAdjacentColors(cards: CardData[]): CardData[] {
     result.push({ ...card, color: CARD_COLORS[next] });
   }
   return result;
-}
+};
 
 const Input = () => {
   const [french, setFrench] = useState("");

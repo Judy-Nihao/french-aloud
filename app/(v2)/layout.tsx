@@ -24,10 +24,12 @@ const caveat = Caveat({
   display: 'swap',
 })
 
-export default function V2Layout({ children }: { children: ReactNode }) {
+const V2Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className={`${playfair.variable} ${dmSans.variable} ${caveat.variable}`}>
       <VoiceProvider>{children}</VoiceProvider>
     </div>
   )
 }
+
+export default V2Layout

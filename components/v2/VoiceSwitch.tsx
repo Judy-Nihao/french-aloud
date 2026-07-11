@@ -8,7 +8,7 @@ const OPTIONS: { value: Voice; label: string }[] = [
   { value: "male", label: "Male" },
 ];
 
-export default function VoiceSwitch() {
+const VoiceSwitch = () => {
   const { voice, setVoice } = useVoice();
 
   return (
@@ -38,4 +38,6 @@ export default function VoiceSwitch() {
       ))}
     </div>
   );
-}
+};
+
+export default VoiceSwitch;
