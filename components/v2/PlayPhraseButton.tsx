@@ -2,14 +2,12 @@
 
 import { useRef, useState } from "react";
 import { AudioLines } from "lucide-react";
-import { supabase } from "@/lib/supabase/client";
 import { useVoice } from "./VoiceContext";
 
 const audioCache = new Map<string, Blob>();
 
 type Props = {
   text: string;
-  imageUrl?: string | null;
   iconClassName?: string;
   iconSize?: number;
   className?: string;
@@ -17,13 +15,11 @@ type Props = {
 
 export default function PlayPhraseButton({
   text,
-  imageUrl = null,
   iconClassName = "",
   iconSize = 20,
   className = "",
 }: Props) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const hasSavedRef = useRef(false);
   const [state, setState] = useState<"idle" | "loading" | "playing" | "error">(
     "idle",
   );
@@ -42,19 +38,6 @@ export default function PlayPhraseButton({
         audioRef.current.onended = null;
         audioRef.current.onpause = null;
         audioRef.current.pause();
-      }
-
-      if (!hasSavedRef.current) {
-        hasSavedRef.current = true;
-        void supabase
-          .from("cards")
-          .insert({ content: phrase, image_url: imageUrl })
-          .then(({ error }) => {
-            if (error) {
-              hasSavedRef.current = false;
-              console.error(`Database insert failed: ${error.message}`);
-            }
-          });
       }
 
       const cacheKey = `${phrase}:${voice}`;

@@ -5,6 +5,8 @@ export type CardDataColor = {
 
 export type CardData = {
   id: string;
+  /** Owner's user id; null for legacy cards created before auth. */
+  userId: string | null;
   french: string;
   english?: string;
   imageUrl?: string | null;

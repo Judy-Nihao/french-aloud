@@ -78,11 +78,13 @@ const COLOR_CLASSES: Record<
 const CarouselCard = ({
   card,
   isFocused,
+  canDelete,
   onSelect,
   onDelete,
 }: {
   card: CardData;
   isFocused: boolean;
+  canDelete: boolean;
   onSelect: () => void;
   onDelete?: (id: string) => void;
 }) => {
@@ -120,7 +122,7 @@ const CarouselCard = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {onDelete && (
+        {onDelete && canDelete && (
           <button
             type="button"
             className={cn(
@@ -188,7 +190,6 @@ const CarouselCard = ({
           <div className="mt-auto flex justify-center pt-4">
             <PlayPhraseButton
               text={card.french}
-              imageUrl={card.imageUrl}
               iconClassName={colorClasses.icon}
               iconSize={22}
             />
@@ -202,10 +203,12 @@ const CarouselCard = ({
 const Carousel = ({
   cards,
   focusCardId,
+  currentUserId,
   onDelete,
 }: {
   cards: CardData[];
   focusCardId?: string | null;
+  currentUserId?: string | null;
   onDelete?: (id: string) => void;
 }) => {
   const startIndex = Math.floor(cards.length / 2);
@@ -503,6 +506,7 @@ const Carousel = ({
               key={card.id}
               card={card}
               isFocused={i === selectedIndex}
+              canDelete={card.userId !== null && card.userId === currentUserId}
               onSelect={() => handleCardSelect(i)}
               onDelete={onDelete}
             />
@@ -516,10 +520,12 @@ const Carousel = ({
 export default function CarouselCards({
   cards,
   focusCardId = null,
+  currentUserId = null,
   onDeleteCard,
 }: {
   cards: CardData[];
   focusCardId?: string | null;
+  currentUserId?: string | null;
   onDeleteCard?: (id: string) => void;
 }) {
   return (
@@ -527,6 +533,7 @@ export default function CarouselCards({
       <Carousel
         cards={cards}
         focusCardId={focusCardId}
+        currentUserId={currentUserId}
         onDelete={onDeleteCard}
       />
     </div>

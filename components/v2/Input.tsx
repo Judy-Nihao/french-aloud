@@ -1,8 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect, type FocusEvent, type FormEvent } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  type FocusEvent,
+  type FormEvent,
+} from "react";
 import { ArrowUp, ImagePlus, X } from "lucide-react";
-import { supabase } from "@/lib/supabase/client";
+import { supabase, ensureSession } from "@/lib/supabase/client";
 import CarouselCards from "./CarouselCards";
 import { CARD_COLORS, type CardData } from "./data";
 
@@ -19,6 +25,7 @@ function stableIndex(id: string, mod: number): number {
 
 type DbRow = {
   id: string;
+  user_id: string | null;
   content: string;
   translation: string | null;
   image_url: string | null;
@@ -27,6 +34,7 @@ type DbRow = {
 function rowToCard(row: DbRow): CardData {
   return {
     id: row.id,
+    userId: row.user_id,
     french: row.content,
     english: row.translation ?? undefined,
     imageUrl: row.image_url,
@@ -63,14 +71,21 @@ const Input = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [cards, setCards] = useState<CardData[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    // Restore a returning visitor's anonymous session (if any) so their
+    // own cards show a delete button. We don't create a session here.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentUserId(session?.user.id ?? null);
+    });
+
     supabase
       .from("cards")
-      .select("id, content, translation, image_url")
+      .select("id, user_id, content, translation, image_url")
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
         if (!error && data) {
@@ -100,6 +115,10 @@ const Input = () => {
     setErrorMessage("");
 
     try {
+      // Sign in anonymously (once) so RLS knows who owns this card.
+      const session = await ensureSession();
+      setCurrentUserId(session.user.id);
+
       const phrase = french.trim();
       const translation = english.trim();
       let imageUrl: string | null = null;
@@ -145,6 +164,7 @@ const Input = () => {
 
       const newCard: CardData = {
         id: savedCard.id,
+        userId: session.user.id,
         french: phrase,
         english: translation || undefined,
         imageUrl,
@@ -172,7 +192,9 @@ const Input = () => {
   };
 
   const handleDeleteCard = async (id: string) => {
-    setCards((prev) => dedupeAdjacentColors(prev.filter((card) => card.id !== id)));
+    setCards((prev) =>
+      dedupeAdjacentColors(prev.filter((card) => card.id !== id)),
+    );
     const { error } = await supabase.from("cards").delete().eq("id", id);
     if (error) console.error(`Failed to delete card: ${error.message}`);
   };
@@ -182,6 +204,7 @@ const Input = () => {
       <CarouselCards
         cards={cards}
         focusCardId={focusCardId}
+        currentUserId={currentUserId}
         onDeleteCard={handleDeleteCard}
       />
 
