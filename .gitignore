@@ -23,12 +23,6 @@
 # misc
 .DS_Store
 *.pem
-SPEC.md
-SUPABASE_SETUP.md
-DEVELOPMENT_NOTES.md
-PRODUCT.md
-DESIGN.md
-/inspiration/
 
 # debug
 npm-debug.log*
@@ -44,10 +38,7 @@ yarn-error.log*
 
 # agent / skill files
 AGENTS.md
-CLAUDE.md
 /.agents/
-/.claude/
-/.impeccable/
 skills-lock.json
 
 # typescript

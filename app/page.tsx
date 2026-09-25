@@ -4,7 +4,7 @@ export const revalidate = 0;
 
 const Home = () => {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 px-6 py-10">
+    <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
       <div className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white/95 p-8 shadow-lg">
         <h1 className="text-4xl font-semibold tracking-tight text-slate-950">
           French Aloud
