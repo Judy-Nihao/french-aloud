@@ -1,4 +1,4 @@
-import { TestIntegrationPanel } from "./test-integration-panel";
+import { FrenchReader } from "@/components/FrenchReader";
 
 export const revalidate = 0;
 
@@ -10,10 +10,9 @@ const Home = () => {
           French Aloud
         </h1>
         <p className="mt-4 text-base leading-7 text-slate-700">
-          A minimal starter for Supabase + ElevenLabs Text-to-Speech
-          integration.
+          Type a French phrase, choose a voice, and hear it read aloud.
         </p>
-        <TestIntegrationPanel />
+        <FrenchReader />
       </div>
     </main>
   );

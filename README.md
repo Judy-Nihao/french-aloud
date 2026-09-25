@@ -11,7 +11,6 @@ Type a French phrase, hear it spoken back. That's the core of it. Still explorin
 - **Next.js App Router**
 - **TypeScript**
 - **Tailwind CSS**
-- **Supabase** — database and image storage
 - **ElevenLabs** — text-to-speech
 
 ## Development

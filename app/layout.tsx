@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "French Aloud",
-  description: "Supabase and ElevenLabs integration demo.",
+  description: "Listen to French phrases with natural-sounding voices.",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
