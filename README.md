@@ -2,18 +2,31 @@
 
 Live demo: https://french-aloud.vercel.app/
 
-Exploring what natural-sounding text-to-speech actually feels like to use — how it sounds, how it fits into a UI, whether it changes how you engage with a foreign language.
+French Aloud is a focused experiment in listening to French. Type a word or
+sentence, choose a voice, and hear it spoken with ElevenLabs text-to-speech.
 
-Type a French phrase, hear it spoken back. That's the core of it. Still exploring.
+## How ElevenLabs Is Used
+
+The app sends text-to-speech requests through its server-side `/api/tts` route
+to the ElevenLabs REST API. The API key is managed through Vercel environment
+variables and is never exposed to the browser.
+
+Official references:
+
+- [Text-to-Speech API](https://elevenlabs.io/docs/eleven-api/guides/cookbooks/text-to-speech#using-the-text-to-speech-api)
+- [List voices API](https://elevenlabs.io/docs/api-reference/voices/search)
 
 ## Tech Stack
 
 - **Next.js App Router**
+- **React**
 - **TypeScript**
 - **Tailwind CSS**
-- **ElevenLabs** — text-to-speech
+- **ElevenLabs REST API** — text-to-speech
 
 ## Development
+
+Node.js 22 is recommended. Next.js requires Node.js 20.9 or newer.
 
 Install dependencies:
 
