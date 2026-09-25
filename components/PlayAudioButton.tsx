@@ -7,7 +7,6 @@ type VoiceType = "female" | "male";
 
 type PlayAudioButtonProps = {
   idleLabel: string;
-  activeLabel?: string;
   text: string;
   voice: VoiceType;
   disabled?: boolean;
@@ -19,7 +18,6 @@ type PlayAudioButtonProps = {
 
 export const PlayAudioButton = ({
   idleLabel,
-  activeLabel = "Playing audio",
   text,
   voice,
   disabled = false,

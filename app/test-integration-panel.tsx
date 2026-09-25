@@ -19,18 +19,6 @@ const voiceOptions: Array<{ label: string; value: VoiceType }> = [
   { label: "Male voice", value: "male" },
 ];
 
-const getCacheMessage = (cacheStatus: string | null) => {
-  if (cacheStatus === "HIT") {
-    return "Using the cached audio.";
-  }
-
-  if (cacheStatus === "MISS") {
-    return "Calling the TTS API and caching the audio.";
-  }
-
-  return "Cache status unavailable.";
-};
-
 export const TestIntegrationPanel = () => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -198,7 +186,6 @@ export const TestIntegrationPanel = () => {
       </fieldset>
       <PlayAudioButton
         idleLabel="Test pronunciation"
-        activeLabel="Playing audio"
         text={text}
         voice={voice}
         disabled={ttsState === "loading"}

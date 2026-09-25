@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import Image from "next/image";
 import { PlayAudioButton } from "@/components/PlayAudioButton";
 
 type VoiceType = "female" | "male";
@@ -22,12 +22,13 @@ export const AudioCard = ({ card, voice, onReset }: AudioCardProps) => {
   return (
     <article className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white">
       {card.image_url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <div className="relative">
-          <img
-            className="aspect-4/3 w-full object-cover"
+        <div className="relative aspect-4/3">
+          <Image
+            className="object-cover"
             src={card.image_url}
             alt=""
+            fill
+            sizes="(min-width: 768px) 704px, 100vw"
           />
         </div>
       ) : null}
@@ -41,7 +42,6 @@ export const AudioCard = ({ card, voice, onReset }: AudioCardProps) => {
           <div>
             <PlayAudioButton
               idleLabel="Play the audio"
-              activeLabel="Playing audio"
               text={card.content}
               voice={voice}
             />
