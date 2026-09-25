@@ -1,7 +1,5 @@
 import { FrenchReader } from "@/components/FrenchReader";
 
-export const revalidate = 0;
-
 const Home = () => {
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
