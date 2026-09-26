@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-
-type VoiceGender = "female" | "male";
+import { getConfiguredVoices } from "@/lib/elevenlabs-voices";
 
 type ElevenLabsVoice = {
   voice_id: string;
@@ -13,19 +12,6 @@ type ElevenLabsVoice = {
 
 type ElevenLabsVoicesResponse = {
   voices?: ElevenLabsVoice[];
-};
-
-const parseVoiceIds = (value: string | undefined) =>
-  [...new Set(value?.split(",").map((id) => id.trim()).filter(Boolean) ?? [])];
-
-const getConfiguredVoices = () => {
-  const femaleIds = parseVoiceIds(process.env.ELEVENLABS_FEMALE_VOICE_IDS);
-  const maleIds = parseVoiceIds(process.env.ELEVENLABS_MALE_VOICE_IDS);
-
-  return [
-    ...femaleIds.map((id) => ({ id, gender: "female" as const })),
-    ...maleIds.map((id) => ({ id, gender: "male" as const })),
-  ];
 };
 
 export const GET = async () => {
@@ -45,7 +31,10 @@ export const GET = async () => {
 
   if (!configuredVoices.some(({ id }) => id === defaultVoiceId)) {
     return NextResponse.json(
-      { error: "The default voice must be included in the configured voice list." },
+      {
+        error:
+          "The default voice must be included in the configured voice list.",
+      },
       { status: 503 },
     );
   }
@@ -91,7 +80,7 @@ export const GET = async () => {
       {
         id,
         name: voice.name,
-        gender: gender satisfies VoiceGender,
+        gender,
         category: voice.category ?? null,
         description: voice.description ?? null,
         labels: voice.labels ?? {},

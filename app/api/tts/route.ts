@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isAllowedVoiceId } from "@/lib/elevenlabs-voices";
 
 const modelId = "eleven_multilingual_v2";
-const voiceSettings = { stability: 0.5, similarity_boost: 0.75 };
+const baseVoiceSettings = { stability: 0.5, similarity_boost: 0.75 };
+const defaultSpeed = 1;
+const minSpeed = 0.25;
+const maxSpeed = 4;
 const maxCacheEntries = 100;
 const audioCache = new Map<string, ArrayBuffer>();
 const voiceTypes = ["female", "male"] as const;
@@ -58,13 +62,62 @@ const getVoiceId = (voice: VoiceType) => {
 };
 
 export const POST = async (req: NextRequest) => {
-  const { text, voice = "female" } = await req.json();
+  let body: unknown;
+
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  if (!body || typeof body !== "object") {
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 },
+    );
+  }
+
+  const {
+    text,
+    voice = "female",
+    voiceId: requestedVoiceId,
+    speed = defaultSpeed,
+  } = body as {
+    text?: unknown;
+    voice?: unknown;
+    voiceId?: unknown;
+    speed?: unknown;
+  };
 
   if (!text || typeof text !== "string" || !text.trim()) {
     return NextResponse.json({ error: "text is required" }, { status: 400 });
   }
 
-  if (!isVoiceType(voice)) {
+  if (
+    requestedVoiceId !== undefined &&
+    (typeof requestedVoiceId !== "string" || !requestedVoiceId.trim())
+  ) {
+    return NextResponse.json(
+      { error: "voiceId must be a non-empty string" },
+      { status: 400 },
+    );
+  }
+
+  if (typeof speed !== "number" || !Number.isFinite(speed)) {
+    return NextResponse.json(
+      { error: "speed must be a number" },
+      { status: 400 },
+    );
+  }
+
+  if (speed < minSpeed || speed > maxSpeed) {
+    return NextResponse.json(
+      { error: `speed must be between ${minSpeed} and ${maxSpeed}` },
+      { status: 400 },
+    );
+  }
+
+  if (requestedVoiceId === undefined && !isVoiceType(voice)) {
     return NextResponse.json(
       { error: "voice must be female or male" },
       { status: 400 },
@@ -72,7 +125,10 @@ export const POST = async (req: NextRequest) => {
   }
 
   const apiKey = process.env.ELEVENLABS_API_KEY;
-  const voiceId = getVoiceId(voice);
+  const voiceId =
+    typeof requestedVoiceId === "string"
+      ? requestedVoiceId.trim()
+      : getVoiceId(voice as VoiceType);
 
   if (!apiKey || !voiceId) {
     return NextResponse.json(
@@ -84,10 +140,17 @@ export const POST = async (req: NextRequest) => {
     );
   }
 
+  if (!isAllowedVoiceId(voiceId)) {
+    return NextResponse.json(
+      { error: "This voice is not available" },
+      { status: 400 },
+    );
+  }
+
   const normalizedText = text.trim();
+  const voiceSettings = { ...baseVoiceSettings, speed };
   const cacheKey = await getCacheKey({
     text: normalizedText,
-    voice,
     voiceId,
     modelId,
     voiceSettings,
