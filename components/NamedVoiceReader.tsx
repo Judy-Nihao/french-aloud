@@ -27,6 +27,8 @@ const voiceGroups: Array<{
   label: string;
   symbol: string;
   labelClassName: string;
+  selectedClassName: string;
+  selectedLabelClassName: string;
   placeholder: string;
 }> = [
   {
@@ -34,6 +36,8 @@ const voiceGroups: Array<{
     label: "Female voices",
     symbol: "♀",
     labelClassName: "bg-rose-100 text-rose-900",
+    selectedClassName: "border-rose-300 bg-rose-50/70",
+    selectedLabelClassName: "text-rose-800",
     placeholder: "Choose a female voice",
   },
   {
@@ -41,6 +45,8 @@ const voiceGroups: Array<{
     label: "Male voices",
     symbol: "♂",
     labelClassName: "bg-sky-100 text-sky-900",
+    selectedClassName: "border-sky-300 bg-sky-50/70",
+    selectedLabelClassName: "text-sky-800",
     placeholder: "Choose a male voice",
   },
 ];
@@ -58,9 +64,8 @@ export const NamedVoiceReader = () => {
   const [voiceListError, setVoiceListError] = useState("");
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [statusMessage, setStatusMessage] = useState(
-    "Choose a voice, then listen.",
-  );
+  const [statusMessage, setStatusMessage] = useState("");
+  const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -140,16 +145,31 @@ export const NamedVoiceReader = () => {
         disabled={voiceListStatus !== "ready" || isGenerating}
         onStatusChange={(state, message) => {
           setIsGenerating(state === "loading");
-          setStatusMessage(message);
+          setStatusMessage(state === "success" ? "" : message);
         }}
+        onCacheStatusChange={setCacheStatus}
       />
 
-      <p
-        className="mt-3 min-h-10 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600"
-        aria-live="polite"
-      >
-        {statusMessage}
-      </p>
+      <div aria-live="polite">
+        {cacheStatus ? (
+          <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-medium text-stone-500">
+            <span
+              className="h-1.5 w-1.5 rounded-full bg-stone-400"
+              aria-hidden="true"
+            />
+            API ·{" "}
+            {cacheStatus === "hit" ? "Cached audio" : "New audio generated"}
+          </p>
+        ) : null}
+      </div>
+
+      <div aria-live="polite">
+        {statusMessage ? (
+          <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600">
+            {statusMessage}
+          </p>
+        ) : null}
+      </div>
 
       <div className="mt-8">
         {voiceListStatus === "loading" ? <VoiceListSkeleton /> : null}
@@ -186,27 +206,50 @@ export const NamedVoiceReader = () => {
               )
                 ? selectedVoiceId
                 : "";
+              const isSelected = Boolean(selectedGroupVoice);
 
               return (
-                <div key={group.gender}>
-                  <label
-                    className={`mb-2 inline-flex min-h-8 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
-                    htmlFor={selectId}
-                  >
-                    <span className="text-base leading-none" aria-hidden="true">
-                      {group.symbol}
-                    </span>
-                    {group.label}
-                  </label>
+                <div
+                  key={group.gender}
+                  className={`rounded-xl border p-3 transition-colors duration-200 ${
+                    isSelected ? group.selectedClassName : "border-transparent"
+                  }`}
+                  aria-current={isSelected ? "true" : undefined}
+                >
+                  <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
+                    <label
+                      className={`inline-flex min-h-8 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
+                      htmlFor={selectId}
+                    >
+                      <span
+                        className="text-base leading-none"
+                        aria-hidden="true"
+                      >
+                        {group.symbol}
+                      </span>
+                      {group.label}
+                    </label>
+
+                    {isSelected ? (
+                      <span
+                        className={`text-xs font-semibold ${group.selectedLabelClassName}`}
+                      >
+                        Selected
+                      </span>
+                    ) : null}
+                  </div>
 
                   <div className="relative">
                     <select
                       id={selectId}
-                      className="min-h-12 w-full cursor-pointer appearance-none rounded-lg border border-stone-300 bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200"
+                      className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200 ${
+                        isSelected ? "border-stone-500" : "border-stone-300"
+                      }`}
                       value={selectedGroupVoice ?? ""}
-                      onChange={(event) =>
-                        setSelectedVoiceId(event.target.value)
-                      }
+                      onChange={(event) => {
+                        setSelectedVoiceId(event.target.value);
+                        setStatusMessage("");
+                      }}
                     >
                       <option value="" disabled>
                         {group.placeholder}

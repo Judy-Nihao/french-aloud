@@ -12,6 +12,7 @@ type NamedVoicePlayButtonProps = {
     state: "loading" | "success" | "error",
     message: string,
   ) => void;
+  onCacheStatusChange?: (status: "hit" | "miss" | null) => void;
 };
 
 export const NamedVoicePlayButton = ({
@@ -20,6 +21,7 @@ export const NamedVoicePlayButton = ({
   voiceName,
   disabled = false,
   onStatusChange,
+  onCacheStatusChange,
 }: NamedVoicePlayButtonProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
@@ -64,6 +66,7 @@ export const NamedVoicePlayButton = ({
     }
 
     setIsLoading(true);
+    onCacheStatusChange?.(null);
     onStatusChange?.("loading", `Preparing ${voiceName}...`);
 
     try {
@@ -101,10 +104,8 @@ export const NamedVoicePlayButton = ({
       await audio.play();
       setIsPlaying(true);
       setIsLoading(false);
-      onStatusChange?.(
-        "success",
-        `${voiceName} is reading. ${getCacheMessage(cacheStatus)}`,
-      );
+      onCacheStatusChange?.(getCacheStatus(cacheStatus));
+      onStatusChange?.("success", "");
     } catch (error) {
       setIsPlaying(false);
       setIsLoading(false);
@@ -132,8 +133,8 @@ export const NamedVoicePlayButton = ({
   );
 };
 
-const getCacheMessage = (cacheStatus: string | null) => {
-  if (cacheStatus === "HIT") return "Using cached audio.";
-  if (cacheStatus === "MISS") return "A new audio clip was generated.";
-  return "";
+const getCacheStatus = (cacheStatus: string | null) => {
+  if (cacheStatus === "HIT") return "hit";
+  if (cacheStatus === "MISS") return "miss";
+  return null;
 };
