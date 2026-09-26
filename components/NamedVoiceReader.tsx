@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
-import { RotateCcw } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import { NamedVoicePlayButton } from "@/components/NamedVoicePlayButton";
 
 type VoiceGender = "female" | "male";
@@ -22,9 +22,27 @@ type VoiceListResponse = {
   error?: string;
 };
 
-const voiceGroups: Array<{ gender: VoiceGender; label: string }> = [
-  { gender: "female", label: "Female voices" },
-  { gender: "male", label: "Male voices" },
+const voiceGroups: Array<{
+  gender: VoiceGender;
+  label: string;
+  symbol: string;
+  labelClassName: string;
+  placeholder: string;
+}> = [
+  {
+    gender: "female",
+    label: "Female voices",
+    symbol: "♀",
+    labelClassName: "bg-rose-100 text-rose-900",
+    placeholder: "Choose a female voice",
+  },
+  {
+    gender: "male",
+    label: "Male voices",
+    symbol: "♂",
+    labelClassName: "bg-sky-100 text-sky-900",
+    placeholder: "Choose a male voice",
+  },
 ];
 
 export const NamedVoiceReader = () => {
@@ -115,16 +133,25 @@ export const NamedVoiceReader = () => {
         />
       </div>
 
-      <div className="mt-8">
-        <div className="mb-4 flex items-baseline justify-between gap-4">
-          <h2 className="text-sm font-semibold text-stone-800">Voice</h2>
-          {selectedVoice ? (
-            <p className="truncate text-xs text-stone-500">
-              Selected: {selectedVoice.name}
-            </p>
-          ) : null}
-        </div>
+      <NamedVoicePlayButton
+        text={text}
+        voiceId={selectedVoice?.id ?? null}
+        voiceName={selectedVoice?.name ?? null}
+        disabled={voiceListStatus !== "ready" || isGenerating}
+        onStatusChange={(state, message) => {
+          setIsGenerating(state === "loading");
+          setStatusMessage(message);
+        }}
+      />
 
+      <p
+        className="mt-3 min-h-10 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600"
+        aria-live="polite"
+      >
+        {statusMessage}
+      </p>
+
+      <div className="mt-8">
         {voiceListStatus === "loading" ? <VoiceListSkeleton /> : null}
 
         {voiceListStatus === "error" ? (
@@ -148,102 +175,73 @@ export const NamedVoiceReader = () => {
         ) : null}
 
         {voiceListStatus === "ready" ? (
-          <div className="grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             {voiceGroups.map((group) => {
               const groupVoices = voices.filter(
                 (voice) => voice.gender === group.gender,
               );
+              const selectId = `${group.gender}-voice`;
+              const selectedGroupVoice = groupVoices.some(
+                (voice) => voice.id === selectedVoiceId,
+              )
+                ? selectedVoiceId
+                : "";
 
               return (
-                <fieldset className="min-w-0" key={group.gender}>
-                  <legend className="mb-2 text-xs font-semibold tracking-wide text-stone-500 uppercase">
+                <div key={group.gender}>
+                  <label
+                    className={`mb-2 inline-flex min-h-8 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
+                    htmlFor={selectId}
+                  >
+                    <span className="text-base leading-none" aria-hidden="true">
+                      {group.symbol}
+                    </span>
                     {group.label}
-                  </legend>
-                  <div className="overflow-hidden rounded-lg border border-stone-300 bg-stone-50">
-                    {groupVoices.map((voice, index) => {
-                      const isSelected = voice.id === selectedVoiceId;
+                  </label>
 
-                      return (
-                        <label
-                          className={`flex min-h-16 cursor-pointer items-start gap-3 px-3.5 py-3 transition-colors duration-150 focus-within:relative focus-within:z-10 focus-within:ring-2 focus-within:ring-stone-500 focus-within:ring-inset ${
-                            index > 0 ? "border-t border-stone-200" : ""
-                          } ${
-                            isSelected
-                              ? "bg-stone-200/70"
-                              : "hover:bg-stone-100"
-                          }`}
-                          key={voice.id}
-                        >
-                          <input
-                            checked={isSelected}
-                            className="mt-1 h-4 w-4 shrink-0 accent-stone-900"
-                            name="voiceId"
-                            onChange={() => setSelectedVoiceId(voice.id)}
-                            type="radio"
-                            value={voice.id}
-                          />
-                          <span className="min-w-0">
-                            <span className="block text-sm font-semibold text-stone-900">
-                              {voice.name}
-                            </span>
-                            {voice.description ? (
-                              <span className="mt-0.5 line-clamp-2 block text-xs leading-5 text-stone-600">
-                                {voice.description}
-                              </span>
-                            ) : null}
-                          </span>
-                        </label>
-                      );
-                    })}
+                  <div className="relative">
+                    <select
+                      id={selectId}
+                      className="min-h-12 w-full cursor-pointer appearance-none rounded-lg border border-stone-300 bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200"
+                      value={selectedGroupVoice ?? ""}
+                      onChange={(event) =>
+                        setSelectedVoiceId(event.target.value)
+                      }
+                    >
+                      <option value="" disabled>
+                        {group.placeholder}
+                      </option>
+                      {groupVoices.map((voice) => (
+                        <option key={voice.id} value={voice.id}>
+                          {voice.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-stone-500"
+                      aria-hidden="true"
+                    />
                   </div>
-                </fieldset>
+                </div>
               );
             })}
           </div>
         ) : null}
       </div>
-
-      <NamedVoicePlayButton
-        text={text}
-        voiceId={selectedVoice?.id ?? null}
-        voiceName={selectedVoice?.name ?? null}
-        disabled={voiceListStatus !== "ready" || isGenerating}
-        onStatusChange={(state, message) => {
-          setIsGenerating(state === "loading");
-          setStatusMessage(message);
-        }}
-      />
-
-      <p
-        className="mt-4 min-h-10 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600"
-        aria-live="polite"
-      >
-        {statusMessage}
-      </p>
     </section>
   );
 };
 
 const VoiceListSkeleton = () => (
   <div
-    className="grid gap-6 sm:grid-cols-2"
+    className="grid gap-5 sm:grid-cols-2"
     aria-label="Loading voices"
     role="status"
   >
-    {["Female voices", "Male voices"].map((label) => (
-      <div key={label}>
-        <div className="mb-2 h-3 w-24 rounded bg-stone-200 motion-safe:animate-pulse" />
-        <div className="overflow-hidden rounded-lg border border-stone-200">
-          {[0, 1, 2].map((item) => (
-            <div
-              className="flex min-h-16 items-center gap-3 border-t border-stone-200 px-3.5 first:border-t-0"
-              key={item}
-            >
-              <div className="h-4 w-4 rounded-full bg-stone-200 motion-safe:animate-pulse" />
-              <div className="h-3 w-2/3 rounded bg-stone-200 motion-safe:animate-pulse" />
-            </div>
-          ))}
-        </div>
+    {voiceGroups.map((group) => (
+      <div key={group.gender} className="motion-safe:animate-pulse">
+        <div className="mb-2 h-8 w-32 rounded-md bg-stone-200" />
+        <div className="h-12 w-full rounded-lg border border-stone-200 bg-stone-200" />
       </div>
     ))}
   </div>
