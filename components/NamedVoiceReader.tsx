@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { NamedVoicePlayButton } from "@/components/NamedVoicePlayButton";
+import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
 
 type VoiceGender = "female" | "male";
 
@@ -66,6 +67,7 @@ export const NamedVoiceReader = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
+  const [speed, setSpeed] = useState(1);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -142,6 +144,7 @@ export const NamedVoiceReader = () => {
         text={text}
         voiceId={selectedVoice?.id ?? null}
         voiceName={selectedVoice?.name ?? null}
+        speed={speed}
         disabled={voiceListStatus !== "ready" || isGenerating}
         onStatusChange={(state, message) => {
           setIsGenerating(state === "loading");
@@ -195,80 +198,95 @@ export const NamedVoiceReader = () => {
         ) : null}
 
         {voiceListStatus === "ready" ? (
-          <div className="grid gap-5 sm:grid-cols-2">
-            {voiceGroups.map((group) => {
-              const groupVoices = voices.filter(
-                (voice) => voice.gender === group.gender,
-              );
-              const selectId = `${group.gender}-voice`;
-              const selectedGroupVoice = groupVoices.some(
-                (voice) => voice.id === selectedVoiceId,
-              )
-                ? selectedVoiceId
-                : "";
-              const isSelected = Boolean(selectedGroupVoice);
+          <>
+            <div className="grid gap-5 sm:grid-cols-2">
+              {voiceGroups.map((group) => {
+                const groupVoices = voices.filter(
+                  (voice) => voice.gender === group.gender,
+                );
+                const selectId = `${group.gender}-voice`;
+                const selectedGroupVoice = groupVoices.some(
+                  (voice) => voice.id === selectedVoiceId,
+                )
+                  ? selectedVoiceId
+                  : "";
+                const isSelected = Boolean(selectedGroupVoice);
 
-              return (
-                <div
-                  key={group.gender}
-                  className={`rounded-xl border p-3 transition-colors duration-200 ${
-                    isSelected ? group.selectedClassName : "border-transparent"
-                  }`}
-                  aria-current={isSelected ? "true" : undefined}
-                >
-                  <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
-                    <label
-                      className={`inline-flex min-h-8 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
-                      htmlFor={selectId}
-                    >
-                      <span
-                        className="text-base leading-none"
-                        aria-hidden="true"
+                return (
+                  <div
+                    key={group.gender}
+                    className={`rounded-xl border p-3 transition-colors duration-200 ${
+                      isSelected
+                        ? group.selectedClassName
+                        : "border-transparent"
+                    }`}
+                    aria-current={isSelected ? "true" : undefined}
+                  >
+                    <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
+                      <label
+                        className={`inline-flex min-h-8 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
+                        htmlFor={selectId}
                       >
-                        {group.symbol}
-                      </span>
-                      {group.label}
-                    </label>
+                        <span
+                          className="text-base leading-none"
+                          aria-hidden="true"
+                        >
+                          {group.symbol}
+                        </span>
+                        {group.label}
+                      </label>
 
-                    {isSelected ? (
-                      <span
-                        className={`text-xs font-semibold ${group.selectedLabelClassName}`}
+                      {isSelected ? (
+                        <span
+                          className={`text-xs font-semibold ${group.selectedLabelClassName}`}
+                        >
+                          Selected
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <div className="relative">
+                      <select
+                        id={selectId}
+                        className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200 ${
+                          isSelected ? "border-stone-500" : "border-stone-300"
+                        }`}
+                        value={selectedGroupVoice ?? ""}
+                        onChange={(event) => {
+                          setSelectedVoiceId(event.target.value);
+                          setStatusMessage("");
+                          setCacheStatus(null);
+                        }}
                       >
-                        Selected
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="relative">
-                    <select
-                      id={selectId}
-                      className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200 ${
-                        isSelected ? "border-stone-500" : "border-stone-300"
-                      }`}
-                      value={selectedGroupVoice ?? ""}
-                      onChange={(event) => {
-                        setSelectedVoiceId(event.target.value);
-                        setStatusMessage("");
-                      }}
-                    >
-                      <option value="" disabled>
-                        {group.placeholder}
-                      </option>
-                      {groupVoices.map((voice) => (
-                        <option key={voice.id} value={voice.id}>
-                          {voice.name}
+                        <option value="" disabled>
+                          {group.placeholder}
                         </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-stone-500"
-                      aria-hidden="true"
-                    />
+                        {groupVoices.map((voice) => (
+                          <option key={voice.id} value={voice.id}>
+                            {voice.name}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-stone-500"
+                        aria-hidden="true"
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+
+            <SpeechSpeedControl
+              value={speed}
+              disabled={isGenerating}
+              onChange={(nextSpeed) => {
+                setSpeed(nextSpeed);
+                setStatusMessage("");
+                setCacheStatus(null);
+              }}
+            />
+          </>
         ) : null}
       </div>
     </section>

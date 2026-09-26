@@ -7,6 +7,7 @@ type NamedVoicePlayButtonProps = {
   text: string;
   voiceId: string | null;
   voiceName: string | null;
+  speed: number;
   disabled?: boolean;
   onStatusChange?: (
     state: "loading" | "success" | "error",
@@ -19,6 +20,7 @@ export const NamedVoicePlayButton = ({
   text,
   voiceId,
   voiceName,
+  speed,
   disabled = false,
   onStatusChange,
   onCacheStatusChange,
@@ -75,7 +77,7 @@ export const NamedVoicePlayButton = ({
       const response = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: phrase, voiceId }),
+        body: JSON.stringify({ text: phrase, voiceId, speed }),
       });
 
       if (!response.ok) {
