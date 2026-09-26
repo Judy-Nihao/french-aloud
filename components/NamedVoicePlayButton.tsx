@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AudioLines } from "lucide-react";
+import type { ReadingMode } from "@/components/ReadingModeControl";
 
 type NamedVoicePlayButtonProps = {
   text: string;
   voiceId: string | null;
   voiceName: string | null;
   speed: number;
+  readingMode: ReadingMode;
   disabled?: boolean;
   onStatusChange?: (
     state: "loading" | "success" | "error",
@@ -21,6 +23,7 @@ export const NamedVoicePlayButton = ({
   voiceId,
   voiceName,
   speed,
+  readingMode,
   disabled = false,
   onStatusChange,
   onCacheStatusChange,
@@ -77,7 +80,7 @@ export const NamedVoicePlayButton = ({
       const response = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: phrase, voiceId, speed }),
+        body: JSON.stringify({ text: phrase, voiceId, speed, readingMode }),
       });
 
       if (!response.ok) {

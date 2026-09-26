@@ -2,15 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAllowedVoiceId } from "@/lib/elevenlabs-voices";
 
 const modelId = "eleven_multilingual_v2";
-const baseVoiceSettings = { stability: 0.5, similarity_boost: 0.75 };
+const similarityBoost = 0.75;
 const defaultSpeed = 1;
-const minSpeed = 0.25;
-const maxSpeed = 4;
+const minSpeed = 0.7;
+const maxSpeed = 1.2;
 const maxCacheEntries = 100;
 const audioCache = new Map<string, ArrayBuffer>();
 const voiceTypes = ["female", "male"] as const;
+const readingModes = ["clear", "natural", "expressive"] as const;
+
+const voiceSettingsByMode = {
+  clear: { stability: 0.75, style: 0 },
+  natural: { stability: 0.5, style: 0 },
+  expressive: { stability: 0.4, style: 0.25 },
+} as const;
 
 type VoiceType = (typeof voiceTypes)[number];
+type ReadingMode = (typeof readingModes)[number];
 
 const getCacheKey = async (input: unknown) => {
   const encoder = new TextEncoder();
@@ -51,6 +59,10 @@ const isVoiceType = (value: unknown): value is VoiceType => {
   return voiceTypes.includes(value as VoiceType);
 };
 
+const isReadingMode = (value: unknown): value is ReadingMode => {
+  return readingModes.includes(value as ReadingMode);
+};
+
 const getVoiceId = (voice: VoiceType) => {
   const voiceIdByType: Record<VoiceType, string | undefined> = {
     female:
@@ -82,11 +94,13 @@ export const POST = async (req: NextRequest) => {
     voice = "female",
     voiceId: requestedVoiceId,
     speed = defaultSpeed,
+    readingMode = "natural",
   } = body as {
     text?: unknown;
     voice?: unknown;
     voiceId?: unknown;
     speed?: unknown;
+    readingMode?: unknown;
   };
 
   if (!text || typeof text !== "string" || !text.trim()) {
@@ -113,6 +127,13 @@ export const POST = async (req: NextRequest) => {
   if (speed < minSpeed || speed > maxSpeed) {
     return NextResponse.json(
       { error: `speed must be between ${minSpeed} and ${maxSpeed}` },
+      { status: 400 },
+    );
+  }
+
+  if (!isReadingMode(readingMode)) {
+    return NextResponse.json(
+      { error: "readingMode must be clear, natural, or expressive" },
       { status: 400 },
     );
   }
@@ -148,7 +169,11 @@ export const POST = async (req: NextRequest) => {
   }
 
   const normalizedText = text.trim();
-  const voiceSettings = { ...baseVoiceSettings, speed };
+  const voiceSettings = {
+    ...voiceSettingsByMode[readingMode],
+    similarity_boost: similarityBoost,
+    speed,
+  };
   const cacheKey = await getCacheKey({
     text: normalizedText,
     voiceId,

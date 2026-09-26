@@ -4,8 +4,8 @@ type SpeechSpeedControlProps = {
   onChange: (speed: number) => void;
 };
 
-const minSpeed = 0.5;
-const maxSpeed = 2;
+const minSpeed = 0.7;
+const maxSpeed = 1.2;
 const speedStep = 0.05;
 
 export const SpeechSpeedControl = ({
@@ -48,9 +48,9 @@ export const SpeechSpeedControl = ({
         className="relative mt-1 h-4 text-xs text-stone-500"
         aria-hidden="true"
       >
-        <span className="absolute left-0">0.5×</span>
-        <span className="absolute left-1/3 -translate-x-1/2">1× normal</span>
-        <span className="absolute right-0">2×</span>
+        <span className="absolute left-0">0.7×</span>
+        <span className="absolute left-[60%] -translate-x-1/2">1× normal</span>
+        <span className="absolute right-0">1.2×</span>
       </div>
     </fieldset>
   );

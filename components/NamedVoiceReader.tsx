@@ -3,6 +3,10 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { NamedVoicePlayButton } from "@/components/NamedVoicePlayButton";
+import {
+  ReadingModeControl,
+  type ReadingMode,
+} from "@/components/ReadingModeControl";
 import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
 
 type VoiceGender = "female" | "male";
@@ -68,6 +72,7 @@ export const NamedVoiceReader = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
   const [speed, setSpeed] = useState(1);
+  const [readingMode, setReadingMode] = useState<ReadingMode>("natural");
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -145,6 +150,7 @@ export const NamedVoiceReader = () => {
         voiceId={selectedVoice?.id ?? null}
         voiceName={selectedVoice?.name ?? null}
         speed={speed}
+        readingMode={readingMode}
         disabled={voiceListStatus !== "ready" || isGenerating}
         onStatusChange={(state, message) => {
           setIsGenerating(state === "loading");
@@ -282,6 +288,16 @@ export const NamedVoiceReader = () => {
               disabled={isGenerating}
               onChange={(nextSpeed) => {
                 setSpeed(nextSpeed);
+                setStatusMessage("");
+                setCacheStatus(null);
+              }}
+            />
+
+            <ReadingModeControl
+              value={readingMode}
+              disabled={isGenerating}
+              onChange={(nextMode) => {
+                setReadingMode(nextMode);
                 setStatusMessage("");
                 setCacheStatus(null);
               }}
