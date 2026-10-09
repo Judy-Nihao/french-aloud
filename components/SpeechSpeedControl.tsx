@@ -15,24 +15,24 @@ export const SpeechSpeedControl = ({
 }: SpeechSpeedControlProps) => {
   return (
     <fieldset className="mt-8 rounded-xl border border-stone-200 bg-stone-50/70 px-4 py-4 sm:px-5">
-      <legend className="sr-only">Reading speed</legend>
+      <legend className="sr-only">Playback speed</legend>
       <div className="flex items-center justify-between gap-4">
         <label
           className="text-sm font-semibold text-stone-800"
-          htmlFor="reading-speed"
+          htmlFor="playback-speed"
         >
-          Reading speed
+          Playback speed
         </label>
         <output
           className="min-w-14 rounded-md bg-stone-200 px-2 py-1 text-center text-sm font-semibold text-stone-700 tabular-nums"
-          htmlFor="reading-speed"
+          htmlFor="playback-speed"
         >
           {formatSpeed(value)}
         </output>
       </div>
 
       <input
-        id="reading-speed"
+        id="playback-speed"
         className="mt-4 h-6 w-full cursor-pointer rounded-full accent-stone-800 focus-visible:ring-2 focus-visible:ring-stone-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         type="range"
         min={minSpeed}
