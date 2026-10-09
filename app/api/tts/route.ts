@@ -1,218 +1,145 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAllowedVoiceId } from "@/lib/elevenlabs-voices";
+import {
+  createSpeechStream,
+  speechModel,
+  voiceSettings,
+} from "@/lib/elevenlabs-stream";
 
-const modelId = "eleven_multilingual_v2";
-const similarityBoost = 0.75;
-const defaultSpeed = 1;
-const minSpeed = 0.7;
-const maxSpeed = 1.2;
-const maxCacheEntries = 100;
-const audioCache = new Map<string, ArrayBuffer>();
-const voiceTypes = ["female", "male"] as const;
-const readingModes = ["clear", "natural", "expressive"] as const;
+export const runtime = "nodejs";
+export const maxDuration = 60;
 
-const voiceSettingsByMode = {
-  clear: { stability: 0.75, style: 0 },
-  natural: { stability: 0.5, style: 0 },
-  expressive: { stability: 0.4, style: 0.25 },
-} as const;
-
-type VoiceType = (typeof voiceTypes)[number];
-type ReadingMode = (typeof readingModes)[number];
-
-const getCacheKey = async (input: unknown) => {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(JSON.stringify(input));
-  const digest = await crypto.subtle.digest("SHA-256", data);
-
-  return [...new Uint8Array(digest)]
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-};
-
-const setCachedAudio = (key: string, audioBuffer: ArrayBuffer) => {
-  if (audioCache.size >= maxCacheEntries) {
-    const oldestKey = audioCache.keys().next().value;
-
-    if (oldestKey) {
-      audioCache.delete(oldestKey);
-    }
-  }
-
-  audioCache.set(key, audioBuffer);
-};
-
-const createAudioResponse = (
-  audioBuffer: ArrayBuffer,
-  cacheStatus: "HIT" | "MISS",
-) => {
-  return new NextResponse(audioBuffer.slice(0), {
-    headers: {
-      "Content-Type": "audio/mpeg",
-      "Cache-Control": "no-store",
-      "X-TTS-Cache": cacheStatus,
-    },
-  });
-};
-
-const isVoiceType = (value: unknown): value is VoiceType => {
-  return voiceTypes.includes(value as VoiceType);
-};
-
-const isReadingMode = (value: unknown): value is ReadingMode => {
-  return readingModes.includes(value as ReadingMode);
-};
-
-const getVoiceId = (voice: VoiceType) => {
-  const voiceIdByType: Record<VoiceType, string | undefined> = {
-    female:
-      process.env.ELEVENLABS_FEMALE_VOICE_ID ?? process.env.ELEVENLABS_VOICE_ID,
-    male: process.env.ELEVENLABS_MALE_VOICE_ID,
-  };
-
-  return voiceIdByType[voice];
-};
+// Best-effort per-instance cache; only completed streams are stored.
+const audioCache = new Map<string, Uint8Array>();
+const maxCacheBytes = 20 * 1024 * 1024;
+const maxEntryBytes = 2 * 1024 * 1024;
+let cacheBytes = 0;
 
 export const POST = async (req: NextRequest) => {
   let body: unknown;
-
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
-
-  if (!body || typeof body !== "object") {
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
     return NextResponse.json(
-      { error: "Invalid request body" },
+      { error: "Invalid request body." },
       { status: 400 },
     );
   }
-
   const {
     text,
-    voice = "female",
     voiceId: requestedVoiceId,
-    speed = defaultSpeed,
-    readingMode = "natural",
+    voice = "female",
   } = body as {
     text?: unknown;
-    voice?: unknown;
     voiceId?: unknown;
-    speed?: unknown;
-    readingMode?: unknown;
+    voice?: unknown;
   };
-
-  if (!text || typeof text !== "string" || !text.trim()) {
-    return NextResponse.json({ error: "text is required" }, { status: 400 });
+  if (typeof text !== "string" || !text.trim()) {
+    return NextResponse.json(
+      { error: "Enter French text first." },
+      { status: 400 },
+    );
   }
-
+  if (text.trim().length > 5_000) {
+    return NextResponse.json(
+      { error: "Please use 5,000 characters or fewer." },
+      { status: 400 },
+    );
+  }
   if (
     requestedVoiceId !== undefined &&
     (typeof requestedVoiceId !== "string" || !requestedVoiceId.trim())
   ) {
+    return NextResponse.json({ error: "Invalid voice ID." }, { status: 400 });
+  }
+  if (
+    requestedVoiceId === undefined &&
+    voice !== "female" &&
+    voice !== "male"
+  ) {
     return NextResponse.json(
-      { error: "voiceId must be a non-empty string" },
+      { error: "Choose a valid voice." },
       { status: 400 },
     );
   }
-
-  if (typeof speed !== "number" || !Number.isFinite(speed)) {
-    return NextResponse.json(
-      { error: "speed must be a number" },
-      { status: 400 },
-    );
-  }
-
-  if (speed < minSpeed || speed > maxSpeed) {
-    return NextResponse.json(
-      { error: `speed must be between ${minSpeed} and ${maxSpeed}` },
-      { status: 400 },
-    );
-  }
-
-  if (!isReadingMode(readingMode)) {
-    return NextResponse.json(
-      { error: "readingMode must be clear, natural, or expressive" },
-      { status: 400 },
-    );
-  }
-
-  if (requestedVoiceId === undefined && !isVoiceType(voice)) {
-    return NextResponse.json(
-      { error: "voice must be female or male" },
-      { status: 400 },
-    );
-  }
-
-  const apiKey = process.env.ELEVENLABS_API_KEY;
   const voiceId =
     typeof requestedVoiceId === "string"
       ? requestedVoiceId.trim()
-      : getVoiceId(voice as VoiceType);
-
+      : voice === "male"
+        ? process.env.ELEVENLABS_MALE_VOICE_ID
+        : (process.env.ELEVENLABS_FEMALE_VOICE_ID ??
+          process.env.ELEVENLABS_VOICE_ID);
+  const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey || !voiceId) {
     return NextResponse.json(
-      {
-        error:
-          "TTS not configured. Set ELEVENLABS_API_KEY, ELEVENLABS_FEMALE_VOICE_ID, and ELEVENLABS_MALE_VOICE_ID.",
-      },
+      { error: "Speech generation is not configured." },
       { status: 503 },
     );
   }
-
   if (!isAllowedVoiceId(voiceId)) {
     return NextResponse.json(
-      { error: "This voice is not available" },
+      { error: "This voice is not available." },
       { status: 400 },
     );
   }
-
   const normalizedText = text.trim();
-  const voiceSettings = {
-    ...voiceSettingsByMode[readingMode],
-    similarity_boost: similarityBoost,
-    speed,
-  };
-  const cacheKey = await getCacheKey({
+  const key = JSON.stringify({
     text: normalizedText,
     voiceId,
-    modelId,
+    model: speechModel,
     voiceSettings,
   });
-  const cachedAudio = audioCache.get(cacheKey);
-
-  if (cachedAudio) {
-    return createAudioResponse(cachedAudio, "HIT");
-  }
-
-  const res = await fetch(
-    `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-    {
-      method: "POST",
-      headers: {
-        "xi-api-key": apiKey,
-        "Content-Type": "application/json",
+  const cached = audioCache.get(key);
+  const headers = {
+    "Content-Type": "application/x-ndjson",
+    "Cache-Control": "no-store, no-transform",
+    "X-TTS-Cache": cached ? "HIT" : "MISS",
+    "X-Accel-Buffering": "no",
+  };
+  if (cached) return new Response(new Uint8Array(cached), { headers });
+  const source = createSpeechStream({
+    text: normalizedText,
+    voiceId,
+    apiKey,
+    signal: req.signal,
+  });
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  let failed = false;
+  const decoder = new TextDecoder();
+  const stream = source.pipeThrough(
+    new TransformStream<Uint8Array, Uint8Array>({
+      transform(chunk, controller) {
+        // Each source chunk is a complete NDJSON event.
+        if (decoder.decode(chunk).includes('"error":')) failed = true;
+        size += chunk.byteLength;
+        if (size <= maxEntryBytes) chunks.push(chunk);
+        else chunks.length = 0;
+        controller.enqueue(chunk);
       },
-      body: JSON.stringify({
-        text: normalizedText,
-        model_id: modelId,
-        voice_settings: voiceSettings,
-      }),
-    },
+      flush() {
+        if (failed || req.signal.aborted || size > maxEntryBytes) return;
+        const audio = new Uint8Array(size);
+        let offset = 0;
+        for (const chunk of chunks) {
+          audio.set(chunk, offset);
+          offset += chunk.byteLength;
+        }
+        cacheBytes -= audioCache.get(key)?.byteLength ?? 0;
+        audioCache.delete(key);
+        while (cacheBytes + size > maxCacheBytes || audioCache.size >= 100) {
+          const oldest = audioCache.keys().next().value;
+          if (oldest === undefined) break;
+          cacheBytes -= audioCache.get(oldest)!.byteLength;
+          audioCache.delete(oldest);
+        }
+        audioCache.set(key, audio);
+        cacheBytes += size;
+      },
+    }),
   );
-
-  if (!res.ok) {
-    const err = await res.text();
-    console.error("ElevenLabs error:", err);
-    return NextResponse.json(
-      { error: "TTS request failed" },
-      { status: res.status },
-    );
-  }
-
-  const audioBuffer = await res.arrayBuffer();
-  setCachedAudio(cacheKey, audioBuffer);
-
-  return createAudioResponse(audioBuffer, "MISS");
+  return new Response(stream, { headers });
 };
