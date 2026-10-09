@@ -4,6 +4,14 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { PlayAudioButton } from "@/components/PlayAudioButton";
 import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
+import { CopyTextButton } from "@/components/CopyTextButton";
+import { RecentReadings } from "@/components/RecentReadings";
+import {
+  addReading,
+  parseReadings,
+  HISTORY_KEY,
+  type Reading,
+} from "@/lib/reading-history";
 
 type VoiceGender = "female" | "male";
 
@@ -64,6 +72,33 @@ export const FrenchReader = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
   const [speed, setSpeed] = useState(1);
+  const [readings, setReadings] = useState<Reading[]>([]);
+  const readingsRef = useRef<Reading[]>([]);
+  const [storageError, setStorageError] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = parseReadings(localStorage.getItem(HISTORY_KEY));
+      readingsRef.current = saved;
+      // Restore browser-only storage after hydration, keeping server markup deterministic.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setReadings(saved);
+    } catch {
+      setStorageError(true);
+    }
+  }, []);
+
+  const saveReadings = (next: Reading[]) => {
+    readingsRef.current = next;
+    setReadings(next);
+    try {
+      if (next.length) localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
+      else localStorage.removeItem(HISTORY_KEY);
+      setStorageError(false);
+    } catch {
+      setStorageError(true);
+    }
+  };
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -121,12 +156,15 @@ export const FrenchReader = () => {
   return (
     <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
       <div className="grid gap-3">
-        <label
-          className="text-sm font-medium text-slate-700"
-          htmlFor="french-text"
-        >
-          French text
-        </label>
+        <div className="flex items-center justify-between gap-3">
+          <label
+            className="text-sm font-medium text-slate-700"
+            htmlFor="french-text"
+          >
+            French text
+          </label>
+          <CopyTextButton text={text} />
+        </div>
         <textarea
           id="french-text"
           ref={textareaRef}
@@ -252,6 +290,9 @@ export const FrenchReader = () => {
           setStatusMessage(state === "success" ? "" : message);
         }}
         onCacheStatusChange={setCacheStatus}
+        onPlaybackStart={(playedText) =>
+          saveReadings(addReading(readingsRef.current, playedText))
+        }
       />
 
       <SpeechSpeedControl value={speed} onChange={setSpeed} />
@@ -276,6 +317,16 @@ export const FrenchReader = () => {
           </p>
         ) : null}
       </div>
+      <RecentReadings
+        readings={readings}
+        storageError={storageError}
+        onClear={() => saveReadings([])}
+        onRestore={(savedText) => {
+          setText(savedText);
+          setStatusMessage("");
+          setCacheStatus(null);
+        }}
+      />
     </section>
   );
 };

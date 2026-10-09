@@ -91,3 +91,22 @@ timeouts and cancellation using a mock WebSocket, without consuming credits.
 For a live smoke test, use `/` with a configured voice and verify French
 playback, speed changes, Stop/Cancel and replay. Actual model/voice availability
 and perceived naturalness must be checked against your ElevenLabs account.
+
+### Copy and recent readings
+
+The Copy button copies only the French text as plain text. Accents, punctuation,
+spacing within the text, and line breaks are preserved; leading and trailing
+whitespace is trimmed. Copying does not request speech or consume generation credits.
+
+Recent readings opens a dismissible drawer: from the bottom on mobile and the
+right on desktop. Text is recorded when audio starts playing, including cached
+playback. Failed requests and requests canceled before playback are not recorded.
+The list keeps the latest 10 unique texts; reading the same text again moves it to
+the top. Use text restores the text to the editor without automatically playing
+it or changing the selected voice or speed. Each entry can be copied, and Clear
+history removes all entries.
+
+History stores text and playback timestamps in this browser's localStorage, not
+audio. It survives reloads but does not sync across devices or browsers. Clearing
+site data removes it. If browser storage is blocked, history works for the current
+visit and the drawer explains that it cannot persist.
