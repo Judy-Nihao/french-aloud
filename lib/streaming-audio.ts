@@ -43,6 +43,8 @@ export class StreamingAudioPlayer {
 
   setSpeed(speed: number) {
     this.audio.preservesPitch = true;
+    // Loading a new source resets playbackRate to this default.
+    this.audio.defaultPlaybackRate = speed;
     this.audio.playbackRate = speed;
   }
 

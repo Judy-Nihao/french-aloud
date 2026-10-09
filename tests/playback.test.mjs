@@ -44,6 +44,7 @@ test.after(() => {
 let audio, media, fetches, request, network, revoked;
 class Audio {
   paused = true;
+  defaultPlaybackRate = 1;
   constructor() {
     // Capture the fake media element for assertions.
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -51,6 +52,8 @@ class Audio {
   }
   set src(value) {
     this.url = value;
+    // Loading a new media source resets playbackRate to defaultPlaybackRate.
+    this.playbackRate = this.defaultPlaybackRate;
     if (media)
       queueMicrotask(() => media.dispatchEvent(new Event("sourceopen")));
   }
@@ -129,6 +132,7 @@ test("starts before generation completes; speed changes preserve pitch without f
   send({ audio: btoa("one") });
   await tick();
   assert.equal(playing, 1);
+  assert.equal(audio.playbackRate, 0.8);
   assert.equal(media.readyState, "open");
   assert.equal(audio.paused, false);
   player.setSpeed(0.7);
