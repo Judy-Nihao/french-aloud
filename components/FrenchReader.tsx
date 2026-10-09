@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
 import { PlayAudioButton } from "@/components/PlayAudioButton";
 
 type VoiceType = "female" | "male";
@@ -15,11 +16,11 @@ export const FrenchReader = () => {
   const [text, setText] = useState(
     "J’apprends le français parce que j’aime trop comment ça sonne.",
   );
+  const [speed, setSpeed] = useState(1);
   const [voice, setVoice] = useState<VoiceType>("female");
   const [statusMessage, setStatusMessage] = useState(
     "Choose a voice, then listen.",
   );
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -45,6 +46,7 @@ export const FrenchReader = () => {
           value={text}
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
             setText(event.target.value);
+            setStatusMessage("");
           }}
         />
       </div>
@@ -72,15 +74,17 @@ export const FrenchReader = () => {
       </fieldset>
 
       <PlayAudioButton
+        key={`${voice}:${text}`}
         idleLabel="Read aloud"
         text={text}
         voice={voice}
-        disabled={isLoading}
+        speed={speed}
         onStatusChange={(state, message) => {
-          setIsLoading(state === "loading");
           setStatusMessage(message);
         }}
       />
+
+      <SpeechSpeedControl value={speed} onChange={setSpeed} />
 
       <p
         className="mt-4 rounded-lg bg-white px-3 py-2 text-sm text-slate-600"

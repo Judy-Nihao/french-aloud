@@ -3,10 +3,6 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { NamedVoicePlayButton } from "@/components/NamedVoicePlayButton";
-import {
-  ReadingModeControl,
-  type ReadingMode,
-} from "@/components/ReadingModeControl";
 import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
 
 type VoiceGender = "female" | "male";
@@ -68,11 +64,9 @@ export const NamedVoiceReader = () => {
   >("loading");
   const [voiceListError, setVoiceListError] = useState("");
   const [loadAttempt, setLoadAttempt] = useState(0);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
   const [speed, setSpeed] = useState(1);
-  const [readingMode, setReadingMode] = useState<ReadingMode>("natural");
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -141,19 +135,20 @@ export const NamedVoiceReader = () => {
           value={text}
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
             setText(event.target.value);
+            setStatusMessage("");
+            setCacheStatus(null);
           }}
         />
       </div>
 
       <NamedVoicePlayButton
+        key={`${selectedVoiceId}:${text}`}
         text={text}
         voiceId={selectedVoice?.id ?? null}
         voiceName={selectedVoice?.name ?? null}
         speed={speed}
-        readingMode={readingMode}
-        disabled={voiceListStatus !== "ready" || isGenerating}
+        disabled={voiceListStatus !== "ready"}
         onStatusChange={(state, message) => {
-          setIsGenerating(state === "loading");
           setStatusMessage(state === "success" ? "" : message);
         }}
         onCacheStatusChange={setCacheStatus}
@@ -283,25 +278,7 @@ export const NamedVoiceReader = () => {
               })}
             </div>
 
-            <SpeechSpeedControl
-              value={speed}
-              disabled={isGenerating}
-              onChange={(nextSpeed) => {
-                setSpeed(nextSpeed);
-                setStatusMessage("");
-                setCacheStatus(null);
-              }}
-            />
-
-            <ReadingModeControl
-              value={readingMode}
-              disabled={isGenerating}
-              onChange={(nextMode) => {
-                setReadingMode(nextMode);
-                setStatusMessage("");
-                setCacheStatus(null);
-              }}
-            />
+            <SpeechSpeedControl value={speed} onChange={setSpeed} />
           </>
         ) : null}
       </div>
