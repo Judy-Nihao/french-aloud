@@ -320,7 +320,14 @@ export const FrenchReader = () => {
       <RecentReadings
         readings={readings}
         storageError={storageError}
-        onClear={() => saveReadings([])}
+        selectedText={text}
+        onRemove={(removedText) =>
+          saveReadings(
+            readingsRef.current.filter(
+              (reading) => reading.text !== removedText,
+            ),
+          )
+        }
         onRestore={(savedText) => {
           setText(savedText);
           setStatusMessage("");

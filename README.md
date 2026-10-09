@@ -102,9 +102,11 @@ Recent readings opens a dismissible drawer: from the bottom on mobile and the
 right on desktop. Text is recorded when audio starts playing, including cached
 playback. Failed requests and requests canceled before playback are not recorded.
 The list keeps the latest 10 unique texts; reading the same text again moves it to
-the top. Use text restores the text to the editor without automatically playing
-it or changing the selected voice or speed. Each entry can be copied, and Clear
-history removes all entries.
+the top. Click a text card to restore it to the editor without automatically
+playing it or changing the selected voice or speed. The drawer stays open and
+highlights the card matching the editor text. Each card has an X button to delete
+that entry; deleting a reading does not clear the editor. The header X closes the
+drawer. Copy remains available beside the main editor.
 
 History stores text and playback timestamps in this browser's localStorage, not
 audio. It survives reloads but does not sync across devices or browsers. Clearing

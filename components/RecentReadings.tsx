@@ -2,18 +2,21 @@
 
 import { Drawer } from "@base-ui/react/drawer";
 import { useEffect, useState } from "react";
-import { CopyTextButton, quietButton } from "./CopyTextButton";
+import { X } from "lucide-react";
+import { quietButton } from "./CopyTextButton";
 import type { Reading } from "@/lib/reading-history";
 
 export function RecentReadings({
   readings,
   onRestore,
-  onClear,
+  onRemove,
   storageError,
+  selectedText,
 }: {
   readings: Reading[];
   onRestore: (text: string) => void;
-  onClear: () => void;
+  onRemove: (text: string) => void;
+  selectedText: string;
   storageError: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -56,7 +59,12 @@ export function RecentReadings({
                   <Drawer.Title className="text-xl font-semibold">
                     Recent readings
                   </Drawer.Title>
-                  <Drawer.Close className={quietButton}>Close</Drawer.Close>
+                  <Drawer.Close
+                    className={iconButton}
+                    aria-label="Close recent readings"
+                  >
+                    <X className="h-4 w-4" aria-hidden="true" />
+                  </Drawer.Close>
                 </div>
                 <Drawer.Description className="mt-2 text-sm text-slate-500">
                   Your last 10 texts, saved in this browser.
@@ -74,47 +82,42 @@ export function RecentReadings({
                     Texts appear here when playback starts.
                   </p>
                 )}
-                <ol className="divide-y divide-slate-200">
-                  {readings.map((reading) => (
-                    <li key={reading.text} className="py-5">
-                      <p
-                        lang="fr"
-                        className="text-base leading-7 break-words whitespace-pre-wrap"
-                      >
-                        {reading.text}
-                      </p>
-                      <time
-                        dateTime={new Date(reading.playedAt).toISOString()}
-                        className="mt-2 block text-xs text-slate-500"
-                      >
-                        {new Date(reading.playedAt).toLocaleString()}
-                      </time>
-                      <div className="mt-2 flex justify-between gap-2">
+                <ol className="grid gap-3 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+                  {readings.map((reading) => {
+                    const selected = selectedText.trim() === reading.text;
+                    return (
+                      <li key={reading.text} className="relative">
                         <button
                           type="button"
-                          className={quietButton}
-                          onClick={() => {
-                            onRestore(reading.text);
-                            setOpen(false);
-                          }}
+                          aria-pressed={selected}
+                          onClick={() => onRestore(reading.text)}
+                          className={`w-full cursor-pointer rounded-xl border p-4 pr-14 text-left transition-[opacity,border-color,background-color] duration-150 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none active:opacity-70 motion-reduce:transition-none ${selected ? "border-slate-400 bg-slate-200/60 opacity-100" : "border-slate-200 bg-slate-100/40 opacity-80 hover:border-slate-300 hover:bg-slate-200/40 hover:opacity-100"}`}
                         >
-                          Use text
+                          <span
+                            lang="fr"
+                            className="block text-base leading-7 break-words whitespace-pre-wrap"
+                          >
+                            {reading.text}
+                          </span>
+                          <time
+                            dateTime={new Date(reading.playedAt).toISOString()}
+                            className="mt-2 block text-xs text-slate-500"
+                          >
+                            {new Date(reading.playedAt).toLocaleString()}
+                          </time>
                         </button>
-                        <CopyTextButton text={reading.text} />
-                      </div>
-                    </li>
-                  ))}
+                        <button
+                          type="button"
+                          className={`${iconButton} absolute top-1 right-1`}
+                          aria-label={`Delete reading: ${reading.text}`}
+                          onClick={() => onRemove(reading.text)}
+                        >
+                          <X className="h-4 w-4" aria-hidden="true" />
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ol>
-              </div>
-              <div className="border-t border-slate-200 px-6 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
-                <button
-                  type="button"
-                  className={quietButton}
-                  disabled={!readings.length}
-                  onClick={onClear}
-                >
-                  Clear history
-                </button>
               </div>
             </Drawer.Content>
           </Drawer.Popup>
@@ -123,3 +126,6 @@ export function RecentReadings({
     </Drawer.Root>
   );
 }
+
+const iconButton =
+  "inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-200/60 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400";
