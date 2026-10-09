@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
-import { ChevronDown, RotateCcw } from "lucide-react";
+import {
+  ChevronDown,
+  Mars,
+  RotateCcw,
+  Venus,
+  type LucideIcon,
+} from "lucide-react";
 import { PlayAudioButton } from "@/components/PlayAudioButton";
 import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
 
@@ -26,7 +32,7 @@ type VoiceListResponse = {
 const voiceGroups: Array<{
   gender: VoiceGender;
   label: string;
-  symbol: string;
+  icon: LucideIcon;
   labelClassName: string;
   selectedClassName: string;
   selectedLabelClassName: string;
@@ -35,7 +41,7 @@ const voiceGroups: Array<{
   {
     gender: "female",
     label: "Female voices",
-    symbol: "♀",
+    icon: Venus,
     labelClassName: "bg-rose-100 text-rose-900",
     selectedClassName: "border-rose-300 bg-rose-50/70",
     selectedLabelClassName: "text-rose-800",
@@ -44,7 +50,7 @@ const voiceGroups: Array<{
   {
     gender: "male",
     label: "Male voices",
-    symbol: "♂",
+    icon: Mars,
     labelClassName: "bg-sky-100 text-sky-900",
     selectedClassName: "border-sky-300 bg-sky-50/70",
     selectedLabelClassName: "text-sky-800",
@@ -171,6 +177,7 @@ export const FrenchReader = () => {
           <>
             <div className="grid gap-5 sm:grid-cols-2">
               {voiceGroups.map((group) => {
+                const GenderIcon = group.icon;
                 const groupVoices = voices.filter(
                   (voice) => voice.gender === group.gender,
                 );
@@ -197,12 +204,11 @@ export const FrenchReader = () => {
                         className={`inline-flex min-h-8 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
                         htmlFor={selectId}
                       >
-                        <span
-                          className="text-base leading-none"
+                        <GenderIcon
+                          className="block h-4 w-4 shrink-0"
                           aria-hidden="true"
-                        >
-                          {group.symbol}
-                        </span>
+                          focusable="false"
+                        />
                         {group.label}
                       </label>
 
