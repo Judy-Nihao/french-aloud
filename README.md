@@ -24,7 +24,11 @@ ElevenLabs to generate it again. Adjusting speed sends no new `/api/tts` request
 and consumes no additional ElevenLabs generation credits. This also works with
 cached audio, and the selected speed applies to subsequent playback.
 
-Both readers share the same playback implementation. Browsers supporting MP3
+The home page (`/`) is the only reader. It combines the spacious home layout
+with named female/male voice dropdowns, colored selection borders and labels.
+The previous `/reader` route and legacy two-option reader have been removed.
+
+Browsers supporting MP3
 MediaSource playback stream audio; others buffer the complete MP3 before playing.
 Stopping, changing text or changing voices cancels the active request.
 
@@ -84,6 +88,6 @@ npm run build
 
 The automated tests exercise streamed audio order, short-text flushing, errors,
 timeouts and cancellation using a mock WebSocket, without consuming credits.
-For a live smoke test, use `/reader` with a configured voice and verify French
+For a live smoke test, use `/` with a configured voice and verify French
 playback, speed changes, Stop/Cancel and replay. Actual model/voice availability
 and perceived naturalness must be checked against your ElevenLabs account.
