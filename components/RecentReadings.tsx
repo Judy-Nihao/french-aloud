@@ -37,12 +37,12 @@ export function RecentReadings({
         </Drawer.Trigger>
       </div>
       <Drawer.Portal>
-        <Drawer.Backdrop className="fixed inset-0 z-40 bg-slate-950/30" />
+        <Drawer.Backdrop className="reading-drawer-backdrop fixed inset-0 z-40 bg-slate-950/30" />
         <Drawer.Viewport
           className={`fixed inset-0 z-50 flex ${desktop ? "justify-end" : "items-end"}`}
         >
           <Drawer.Popup
-            className={`flex flex-col border border-slate-200 bg-slate-50 text-slate-900 shadow-xl outline-none ${desktop ? "h-full w-96 max-w-full" : "max-h-[85dvh] w-full rounded-t-3xl"}`}
+            className={`reading-drawer-popup flex flex-col border border-slate-200 bg-slate-50 text-slate-900 shadow-xl outline-none ${desktop ? "h-full w-96 max-w-full" : "max-h-[85dvh] w-full rounded-t-3xl"}`}
           >
             <Drawer.Content className="flex min-h-0 flex-1 flex-col">
               {!desktop && (

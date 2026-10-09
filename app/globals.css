@@ -22,3 +22,53 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Base UI supplies gesture state; these styles animate it into view. */
+.reading-drawer-popup {
+  transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.reading-drawer-popup[data-swipe-direction="down"] {
+  transform: translateY(var(--drawer-swipe-movement-y, 0px));
+}
+
+.reading-drawer-popup[data-swipe-direction="right"] {
+  transform: translateX(var(--drawer-swipe-movement-x, 0px));
+}
+
+.reading-drawer-popup[data-swipe-direction="down"][data-starting-style],
+.reading-drawer-popup[data-swipe-direction="down"][data-ending-style] {
+  transform: translateY(100%);
+}
+
+.reading-drawer-popup[data-swipe-direction="right"][data-starting-style],
+.reading-drawer-popup[data-swipe-direction="right"][data-ending-style] {
+  transform: translateX(100%);
+}
+
+.reading-drawer-backdrop {
+  opacity: calc(1 - var(--drawer-swipe-progress, 0));
+  transition: opacity 400ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.reading-drawer-backdrop[data-starting-style],
+.reading-drawer-backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+.reading-drawer-popup[data-ending-style],
+.reading-drawer-backdrop[data-ending-style] {
+  transition-duration: calc(var(--drawer-swipe-strength, 1) * 400ms);
+}
+
+.reading-drawer-popup[data-swiping],
+.reading-drawer-backdrop[data-swiping] {
+  transition-duration: 0ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-drawer-popup,
+  .reading-drawer-backdrop {
+    transition: none;
+  }
+}
