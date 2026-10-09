@@ -3,7 +3,6 @@
 import { Drawer } from "@base-ui/react/drawer";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { quietButton } from "./CopyTextButton";
 import type { Reading } from "@/lib/reading-history";
 
 export function RecentReadings({
@@ -34,11 +33,9 @@ export function RecentReadings({
       onOpenChange={setOpen}
       swipeDirection={desktop ? "right" : "down"}
     >
-      <div className="mt-5 flex justify-end border-t border-slate-200 pt-3">
-        <Drawer.Trigger className={quietButton}>
-          Recent readings{readings.length ? ` (${readings.length})` : ""}
-        </Drawer.Trigger>
-      </div>
+      <Drawer.Trigger className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-slate-300 bg-slate-50/80 px-4 py-2 text-sm font-medium whitespace-nowrap text-slate-600 transition-colors hover:border-slate-400 hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:outline-none">
+        Recent readings{readings.length ? ` (${readings.length})` : ""}
+      </Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Backdrop className="reading-drawer-backdrop fixed inset-0 z-40 bg-slate-950/30" />
         <Drawer.Viewport

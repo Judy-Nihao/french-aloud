@@ -154,187 +154,201 @@ export const FrenchReader = () => {
   );
 
   return (
-    <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
-      <div className="grid gap-3">
-        <div className="flex items-center justify-between gap-3">
-          <label
-            className="text-sm font-medium text-slate-700"
-            htmlFor="french-text"
-          >
-            French text
-          </label>
-          <CopyTextButton text={text} />
-        </div>
-        <textarea
-          id="french-text"
-          ref={textareaRef}
-          className="min-h-32 w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-3 text-lg leading-7 text-slate-950 outline-none placeholder:text-slate-400 focus:border-slate-500 focus:ring-4 focus:ring-slate-200"
-          style={{ overflow: "hidden" }}
-          value={text}
-          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-            setText(event.target.value);
-            setStatusMessage("");
-            setCacheStatus(null);
-          }}
-        />
-      </div>
-
-      <div className="mt-8">
-        {voiceListStatus === "loading" ? <VoiceListSkeleton /> : null}
-
-        {voiceListStatus === "error" ? (
-          <div
-            className="rounded-lg border border-stone-300 bg-stone-50 px-4 py-4"
-            role="alert"
-          >
-            <p className="text-sm text-stone-700">{voiceListError}</p>
-            <button
-              type="button"
-              className="mt-3 inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-stone-300 bg-stone-100 px-3 py-2 text-sm font-medium text-stone-800 hover:bg-stone-200 focus-visible:ring-2 focus-visible:ring-stone-500 focus-visible:ring-offset-2 focus-visible:outline-none"
-              onClick={() => {
-                setVoiceListStatus("loading");
-                setLoadAttempt((attempt) => attempt + 1);
-              }}
-            >
-              <RotateCcw className="h-4 w-4" aria-hidden="true" />
-              Try again
-            </button>
-          </div>
-        ) : null}
-
-        {voiceListStatus === "ready" ? (
-          <>
-            <div className="grid gap-5 sm:grid-cols-2">
-              {voiceGroups.map((group) => {
-                const groupVoices = voices.filter(
-                  (voice) => voice.gender === group.gender,
-                );
-                const selectId = `${group.gender}-voice`;
-                const selectedGroupVoice = groupVoices.some(
-                  (voice) => voice.id === selectedVoiceId,
+    <>
+      <header>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+            French Aloud
+          </h1>
+          <div className="ml-auto shrink-0">
+            <RecentReadings
+              readings={readings}
+              storageError={storageError}
+              selectedText={text}
+              onRemove={(removedText) =>
+                saveReadings(
+                  readingsRef.current.filter(
+                    (reading) => reading.text !== removedText,
+                  ),
                 )
-                  ? selectedVoiceId
-                  : "";
-                const isSelected = Boolean(selectedGroupVoice);
-
-                return (
-                  <div
-                    key={group.gender}
-                    className={`rounded-xl border p-3 transition-colors duration-200 ${
-                      isSelected
-                        ? group.selectedClassName
-                        : "border-transparent"
-                    }`}
-                    aria-current={isSelected ? "true" : undefined}
-                  >
-                    <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
-                      <label
-                        className={`inline-flex min-h-8 items-center rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
-                        htmlFor={selectId}
-                      >
-                        {group.label}
-                      </label>
-
-                      {isSelected ? (
-                        <span
-                          className={`text-xs font-semibold ${group.selectedLabelClassName}`}
-                        >
-                          Selected
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <div className="relative">
-                      <select
-                        id={selectId}
-                        className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200 ${
-                          isSelected ? "border-stone-500" : "border-stone-300"
-                        }`}
-                        value={selectedGroupVoice ?? ""}
-                        onChange={(event) => {
-                          setSelectedVoiceId(event.target.value);
-                          setStatusMessage("");
-                          setCacheStatus(null);
-                        }}
-                      >
-                        <option value="" disabled>
-                          {group.placeholder}
-                        </option>
-                        {groupVoices.map((voice) => (
-                          <option key={voice.id} value={voice.id}>
-                            {voice.name}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown
-                        className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-stone-500"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </>
-        ) : null}
-      </div>
-
-      <PlayAudioButton
-        key={`${selectedVoiceId}:${text}`}
-        text={text}
-        voiceId={selectedVoice?.id ?? null}
-        voiceName={selectedVoice?.name ?? null}
-        speed={speed}
-        disabled={voiceListStatus !== "ready"}
-        onStatusChange={(state, message) => {
-          setStatusMessage(state === "success" ? "" : message);
-        }}
-        onCacheStatusChange={setCacheStatus}
-        onPlaybackStart={(playedText) =>
-          saveReadings(addReading(readingsRef.current, playedText))
-        }
-      />
-
-      <SpeechSpeedControl value={speed} onChange={setSpeed} />
-
-      <div aria-live="polite">
-        {cacheStatus ? (
-          <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-medium text-stone-500">
-            <span
-              className="h-1.5 w-1.5 rounded-full bg-stone-400"
-              aria-hidden="true"
+              }
+              onRestore={(savedText) => {
+                setText(savedText);
+                setStatusMessage("");
+                setCacheStatus(null);
+              }}
             />
-            API ·{" "}
-            {cacheStatus === "hit" ? "Cached audio" : "New audio generated"}
-          </p>
-        ) : null}
-      </div>
+          </div>
+        </div>
+        <p className="mt-4 text-base leading-7 text-slate-700">
+          Type a French phrase, choose a voice, and hear it read aloud.
+        </p>
+      </header>
+      <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+        <div className="grid gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <label
+              className="text-sm font-medium text-slate-700"
+              htmlFor="french-text"
+            >
+              French text
+            </label>
+            <CopyTextButton text={text} />
+          </div>
+          <textarea
+            id="french-text"
+            ref={textareaRef}
+            className="min-h-32 w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-3 text-lg leading-7 text-slate-950 outline-none placeholder:text-slate-400 focus:border-slate-500 focus:ring-4 focus:ring-slate-200"
+            style={{ overflow: "hidden" }}
+            value={text}
+            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+              setText(event.target.value);
+              setStatusMessage("");
+              setCacheStatus(null);
+            }}
+          />
+        </div>
 
-      <div aria-live="polite">
-        {statusMessage ? (
-          <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600">
-            {statusMessage}
-          </p>
-        ) : null}
-      </div>
-      <RecentReadings
-        readings={readings}
-        storageError={storageError}
-        selectedText={text}
-        onRemove={(removedText) =>
-          saveReadings(
-            readingsRef.current.filter(
-              (reading) => reading.text !== removedText,
-            ),
-          )
-        }
-        onRestore={(savedText) => {
-          setText(savedText);
-          setStatusMessage("");
-          setCacheStatus(null);
-        }}
-      />
-    </section>
+        <div className="mt-8">
+          {voiceListStatus === "loading" ? <VoiceListSkeleton /> : null}
+
+          {voiceListStatus === "error" ? (
+            <div
+              className="rounded-lg border border-stone-300 bg-stone-50 px-4 py-4"
+              role="alert"
+            >
+              <p className="text-sm text-stone-700">{voiceListError}</p>
+              <button
+                type="button"
+                className="mt-3 inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-stone-300 bg-stone-100 px-3 py-2 text-sm font-medium text-stone-800 hover:bg-stone-200 focus-visible:ring-2 focus-visible:ring-stone-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+                onClick={() => {
+                  setVoiceListStatus("loading");
+                  setLoadAttempt((attempt) => attempt + 1);
+                }}
+              >
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                Try again
+              </button>
+            </div>
+          ) : null}
+
+          {voiceListStatus === "ready" ? (
+            <>
+              <div className="grid gap-5 sm:grid-cols-2">
+                {voiceGroups.map((group) => {
+                  const groupVoices = voices.filter(
+                    (voice) => voice.gender === group.gender,
+                  );
+                  const selectId = `${group.gender}-voice`;
+                  const selectedGroupVoice = groupVoices.some(
+                    (voice) => voice.id === selectedVoiceId,
+                  )
+                    ? selectedVoiceId
+                    : "";
+                  const isSelected = Boolean(selectedGroupVoice);
+
+                  return (
+                    <div
+                      key={group.gender}
+                      className={`rounded-xl border p-3 transition-colors duration-200 ${
+                        isSelected
+                          ? group.selectedClassName
+                          : "border-transparent"
+                      }`}
+                      aria-current={isSelected ? "true" : undefined}
+                    >
+                      <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
+                        <label
+                          className={`inline-flex min-h-8 items-center rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
+                          htmlFor={selectId}
+                        >
+                          {group.label}
+                        </label>
+
+                        {isSelected ? (
+                          <span
+                            className={`text-xs font-semibold ${group.selectedLabelClassName}`}
+                          >
+                            Selected
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <div className="relative">
+                        <select
+                          id={selectId}
+                          className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200 ${
+                            isSelected ? "border-stone-500" : "border-stone-300"
+                          }`}
+                          value={selectedGroupVoice ?? ""}
+                          onChange={(event) => {
+                            setSelectedVoiceId(event.target.value);
+                            setStatusMessage("");
+                            setCacheStatus(null);
+                          }}
+                        >
+                          <option value="" disabled>
+                            {group.placeholder}
+                          </option>
+                          {groupVoices.map((voice) => (
+                            <option key={voice.id} value={voice.id}>
+                              {voice.name}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown
+                          className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-stone-500"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : null}
+        </div>
+
+        <PlayAudioButton
+          key={`${selectedVoiceId}:${text}`}
+          text={text}
+          voiceId={selectedVoice?.id ?? null}
+          voiceName={selectedVoice?.name ?? null}
+          speed={speed}
+          disabled={voiceListStatus !== "ready"}
+          onStatusChange={(state, message) => {
+            setStatusMessage(state === "success" ? "" : message);
+          }}
+          onCacheStatusChange={setCacheStatus}
+          onPlaybackStart={(playedText) =>
+            saveReadings(addReading(readingsRef.current, playedText))
+          }
+        />
+
+        <SpeechSpeedControl value={speed} onChange={setSpeed} />
+
+        <div aria-live="polite">
+          {cacheStatus ? (
+            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-medium text-stone-500">
+              <span
+                className="h-1.5 w-1.5 rounded-full bg-stone-400"
+                aria-hidden="true"
+              />
+              API ·{" "}
+              {cacheStatus === "hit" ? "Cached audio" : "New audio generated"}
+            </p>
+          ) : null}
+        </div>
+
+        <div aria-live="polite">
+          {statusMessage ? (
+            <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600">
+              {statusMessage}
+            </p>
+          ) : null}
+        </div>
+      </section>
+    </>
   );
 };
 
