@@ -96,12 +96,6 @@ export function RecentReadings({
                           >
                             {reading.text}
                           </span>
-                          <time
-                            dateTime={new Date(reading.playedAt).toISOString()}
-                            className="mt-2 block text-xs text-slate-500"
-                          >
-                            {new Date(reading.playedAt).toLocaleString()}
-                          </time>
                         </button>
                         <button
                           type="button"
