@@ -14,8 +14,16 @@ Audio and errors are forwarded to the browser as NDJSON events. The API key
 is managed through environment variables and is never exposed to the browser.
 
 Stability (0.5) and Similarity (0.75) are fixed on the server. There is no
-reading-mode control. Playback speed (0.7× to 1.2×) changes locally, preserves
-pitch and does not generate another request or consume additional credits.
+reading-mode control.
+
+Playback speed (0.7× to 1.2×) can be adjusted while audio is playing. The frontend
+updates the player's `playbackRate`, so the same audio continues from its current
+position at the new speed without restarting. Pitch is preserved. This changes
+how the browser plays the audio; it does not change the original audio or ask
+ElevenLabs to generate it again. Adjusting speed sends no new `/api/tts` request
+and consumes no additional ElevenLabs generation credits. This also works with
+cached audio, and the selected speed applies to subsequent playback.
+
 Both readers share the same playback implementation. Browsers supporting MP3
 MediaSource playback stream audio; others buffer the complete MP3 before playing.
 Stopping, changing text or changing voices cancels the active request.
