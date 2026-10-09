@@ -48,7 +48,7 @@ export const PlayAudioButton = ({
   return (
     <button
       type="button"
-      className="mt-8 flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-stone-900 px-5 py-3 text-sm font-semibold text-stone-50 transition-colors duration-200 hover:bg-stone-700 focus-visible:ring-2 focus-visible:ring-stone-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
+      className="mt-6 flex min-h-12 w-full cursor-pointer items-center justify-center rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-slate-50 transition-colors duration-200 hover:bg-slate-800 focus-visible:ring-4 focus-visible:ring-slate-300 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500"
       onClick={handleClick}
       disabled={disabled && !busy}
     >

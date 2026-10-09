@@ -122,15 +122,18 @@ export const FrenchReader = () => {
   );
 
   return (
-    <section className="mt-10">
-      <div className="grid gap-2">
-        <label className="text-sm font-semibold text-stone-800" htmlFor="text">
+    <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+      <div className="grid gap-3">
+        <label
+          className="text-sm font-medium text-slate-700"
+          htmlFor="french-text"
+        >
           French text
         </label>
         <textarea
-          id="text"
+          id="french-text"
           ref={textareaRef}
-          className="min-h-36 w-full resize-y rounded-lg border border-stone-300 bg-stone-50 px-4 py-3 text-lg leading-8 text-stone-900 outline-none placeholder:text-stone-400 focus:border-stone-500 focus:ring-2 focus:ring-stone-200"
+          className="min-h-32 w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-3 text-lg leading-7 text-slate-950 outline-none placeholder:text-slate-400 focus:border-slate-500 focus:ring-4 focus:ring-slate-200"
           style={{ overflow: "hidden" }}
           value={text}
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -139,40 +142,6 @@ export const FrenchReader = () => {
             setCacheStatus(null);
           }}
         />
-      </div>
-
-      <PlayAudioButton
-        key={`${selectedVoiceId}:${text}`}
-        text={text}
-        voiceId={selectedVoice?.id ?? null}
-        voiceName={selectedVoice?.name ?? null}
-        speed={speed}
-        disabled={voiceListStatus !== "ready"}
-        onStatusChange={(state, message) => {
-          setStatusMessage(state === "success" ? "" : message);
-        }}
-        onCacheStatusChange={setCacheStatus}
-      />
-
-      <div aria-live="polite">
-        {cacheStatus ? (
-          <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-medium text-stone-500">
-            <span
-              className="h-1.5 w-1.5 rounded-full bg-stone-400"
-              aria-hidden="true"
-            />
-            API ·{" "}
-            {cacheStatus === "hit" ? "Cached audio" : "New audio generated"}
-          </p>
-        ) : null}
-      </div>
-
-      <div aria-live="polite">
-        {statusMessage ? (
-          <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600">
-            {statusMessage}
-          </p>
-        ) : null}
       </div>
 
       <div className="mt-8">
@@ -277,9 +246,43 @@ export const FrenchReader = () => {
                 );
               })}
             </div>
-
-            <SpeechSpeedControl value={speed} onChange={setSpeed} />
           </>
+        ) : null}
+      </div>
+
+      <PlayAudioButton
+        key={`${selectedVoiceId}:${text}`}
+        text={text}
+        voiceId={selectedVoice?.id ?? null}
+        voiceName={selectedVoice?.name ?? null}
+        speed={speed}
+        disabled={voiceListStatus !== "ready"}
+        onStatusChange={(state, message) => {
+          setStatusMessage(state === "success" ? "" : message);
+        }}
+        onCacheStatusChange={setCacheStatus}
+      />
+
+      <SpeechSpeedControl value={speed} onChange={setSpeed} />
+
+      <div aria-live="polite">
+        {cacheStatus ? (
+          <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-medium text-stone-500">
+            <span
+              className="h-1.5 w-1.5 rounded-full bg-stone-400"
+              aria-hidden="true"
+            />
+            API ·{" "}
+            {cacheStatus === "hit" ? "Cached audio" : "New audio generated"}
+          </p>
+        ) : null}
+      </div>
+
+      <div aria-live="polite">
+        {statusMessage ? (
+          <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600">
+            {statusMessage}
+          </p>
         ) : null}
       </div>
     </section>
