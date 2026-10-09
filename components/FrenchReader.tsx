@@ -1,14 +1,55 @@
 "use client";
 
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import { PlayAudioButton } from "@/components/PlayAudioButton";
+import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
 
-type VoiceType = "female" | "male";
+type VoiceGender = "female" | "male";
 
-const voiceOptions: Array<{ label: string; value: VoiceType }> = [
-  { label: "Female voice", value: "female" },
-  { label: "Male voice", value: "male" },
+type PublicVoice = {
+  id: string;
+  name: string;
+  gender: VoiceGender;
+  category: string | null;
+  description: string | null;
+  labels: Record<string, string>;
+  previewUrl: string | null;
+  isDefault: boolean;
+};
+
+type VoiceListResponse = {
+  voices?: PublicVoice[];
+  error?: string;
+};
+
+const voiceGroups: Array<{
+  gender: VoiceGender;
+  label: string;
+  symbol: string;
+  labelClassName: string;
+  selectedClassName: string;
+  selectedLabelClassName: string;
+  placeholder: string;
+}> = [
+  {
+    gender: "female",
+    label: "Female voices",
+    symbol: "♀",
+    labelClassName: "bg-rose-100 text-rose-900",
+    selectedClassName: "border-rose-300 bg-rose-50/70",
+    selectedLabelClassName: "text-rose-800",
+    placeholder: "Choose a female voice",
+  },
+  {
+    gender: "male",
+    label: "Male voices",
+    symbol: "♂",
+    labelClassName: "bg-sky-100 text-sky-900",
+    selectedClassName: "border-sky-300 bg-sky-50/70",
+    selectedLabelClassName: "text-sky-800",
+    placeholder: "Choose a male voice",
+  },
 ];
 
 export const FrenchReader = () => {
@@ -16,11 +57,16 @@ export const FrenchReader = () => {
   const [text, setText] = useState(
     "J’apprends le français parce que j’aime trop comment ça sonne.",
   );
+  const [voices, setVoices] = useState<PublicVoice[]>([]);
+  const [selectedVoiceId, setSelectedVoiceId] = useState<string | null>(null);
+  const [voiceListStatus, setVoiceListStatus] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
+  const [voiceListError, setVoiceListError] = useState("");
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
   const [speed, setSpeed] = useState(1);
-  const [voice, setVoice] = useState<VoiceType>("female");
-  const [statusMessage, setStatusMessage] = useState(
-    "Choose a voice, then listen.",
-  );
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -29,69 +75,228 @@ export const FrenchReader = () => {
     textarea.style.height = `${textarea.scrollHeight}px`;
   }, [text]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadVoices = async () => {
+      try {
+        const response = await fetch("/api/voices", {
+          signal: controller.signal,
+        });
+        const data = (await response.json()) as VoiceListResponse;
+
+        if (!response.ok) {
+          throw new Error(data.error ?? "Unable to load voices.");
+        }
+
+        const availableVoices = data.voices ?? [];
+
+        if (availableVoices.length === 0) {
+          throw new Error("No voices are available right now.");
+        }
+
+        setVoices(availableVoices);
+        setSelectedVoiceId(
+          availableVoices.find((voice) => voice.isDefault)?.id ??
+            availableVoices[0].id,
+        );
+        setVoiceListStatus("ready");
+        setVoiceListError("");
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        setVoiceListStatus("error");
+        setVoiceListError(
+          error instanceof Error ? error.message : "Unable to load voices.",
+        );
+      }
+    };
+
+    void loadVoices();
+
+    return () => controller.abort();
+  }, [loadAttempt]);
+
+  const selectedVoice = useMemo(
+    () => voices.find((voice) => voice.id === selectedVoiceId) ?? null,
+    [selectedVoiceId, voices],
+  );
+
   return (
-    <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-      <div className="grid gap-3">
-        <label
-          className="text-sm font-medium text-slate-700"
-          htmlFor="french-text"
-        >
+    <section className="mt-10">
+      <div className="grid gap-2">
+        <label className="text-sm font-semibold text-stone-800" htmlFor="text">
           French text
         </label>
         <textarea
-          id="french-text"
+          id="text"
           ref={textareaRef}
-          className="min-h-32 w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-3 text-lg leading-7 text-slate-950 transition outline-none focus:border-slate-500 focus:ring-4 focus:ring-slate-200"
+          className="min-h-36 w-full resize-y rounded-lg border border-stone-300 bg-stone-50 px-4 py-3 text-lg leading-8 text-stone-900 outline-none placeholder:text-stone-400 focus:border-stone-500 focus:ring-2 focus:ring-stone-200"
           style={{ overflow: "hidden" }}
           value={text}
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
             setText(event.target.value);
             setStatusMessage("");
+            setCacheStatus(null);
           }}
         />
       </div>
 
-      <fieldset className="mt-5 grid gap-3">
-        <legend className="text-sm font-medium text-slate-700">Voice</legend>
-        <div className="grid gap-2 sm:grid-cols-2">
-          {voiceOptions.map((option) => (
-            <label
-              className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100"
-              key={option.value}
-            >
-              <input
-                checked={voice === option.value}
-                className="h-4 w-4 accent-slate-950"
-                name="voice"
-                onChange={() => setVoice(option.value)}
-                type="radio"
-                value={option.value}
-              />
-              {option.label}
-            </label>
-          ))}
-        </div>
-      </fieldset>
-
       <PlayAudioButton
-        key={`${voice}:${text}`}
-        idleLabel="Read aloud"
+        key={`${selectedVoiceId}:${text}`}
         text={text}
-        voice={voice}
+        voiceId={selectedVoice?.id ?? null}
+        voiceName={selectedVoice?.name ?? null}
         speed={speed}
+        disabled={voiceListStatus !== "ready"}
         onStatusChange={(state, message) => {
-          setStatusMessage(message);
+          setStatusMessage(state === "success" ? "" : message);
         }}
+        onCacheStatusChange={setCacheStatus}
       />
 
-      <SpeechSpeedControl value={speed} onChange={setSpeed} />
+      <div aria-live="polite">
+        {cacheStatus ? (
+          <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-medium text-stone-500">
+            <span
+              className="h-1.5 w-1.5 rounded-full bg-stone-400"
+              aria-hidden="true"
+            />
+            API ·{" "}
+            {cacheStatus === "hit" ? "Cached audio" : "New audio generated"}
+          </p>
+        ) : null}
+      </div>
 
-      <p
-        className="mt-4 rounded-lg bg-white px-3 py-2 text-sm text-slate-600"
-        aria-live="polite"
-      >
-        {statusMessage}
-      </p>
+      <div aria-live="polite">
+        {statusMessage ? (
+          <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600">
+            {statusMessage}
+          </p>
+        ) : null}
+      </div>
+
+      <div className="mt-8">
+        {voiceListStatus === "loading" ? <VoiceListSkeleton /> : null}
+
+        {voiceListStatus === "error" ? (
+          <div
+            className="rounded-lg border border-stone-300 bg-stone-50 px-4 py-4"
+            role="alert"
+          >
+            <p className="text-sm text-stone-700">{voiceListError}</p>
+            <button
+              type="button"
+              className="mt-3 inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-stone-300 bg-stone-100 px-3 py-2 text-sm font-medium text-stone-800 hover:bg-stone-200 focus-visible:ring-2 focus-visible:ring-stone-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+              onClick={() => {
+                setVoiceListStatus("loading");
+                setLoadAttempt((attempt) => attempt + 1);
+              }}
+            >
+              <RotateCcw className="h-4 w-4" aria-hidden="true" />
+              Try again
+            </button>
+          </div>
+        ) : null}
+
+        {voiceListStatus === "ready" ? (
+          <>
+            <div className="grid gap-5 sm:grid-cols-2">
+              {voiceGroups.map((group) => {
+                const groupVoices = voices.filter(
+                  (voice) => voice.gender === group.gender,
+                );
+                const selectId = `${group.gender}-voice`;
+                const selectedGroupVoice = groupVoices.some(
+                  (voice) => voice.id === selectedVoiceId,
+                )
+                  ? selectedVoiceId
+                  : "";
+                const isSelected = Boolean(selectedGroupVoice);
+
+                return (
+                  <div
+                    key={group.gender}
+                    className={`rounded-xl border p-3 transition-colors duration-200 ${
+                      isSelected
+                        ? group.selectedClassName
+                        : "border-transparent"
+                    }`}
+                    aria-current={isSelected ? "true" : undefined}
+                  >
+                    <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
+                      <label
+                        className={`inline-flex min-h-8 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
+                        htmlFor={selectId}
+                      >
+                        <span
+                          className="text-base leading-none"
+                          aria-hidden="true"
+                        >
+                          {group.symbol}
+                        </span>
+                        {group.label}
+                      </label>
+
+                      {isSelected ? (
+                        <span
+                          className={`text-xs font-semibold ${group.selectedLabelClassName}`}
+                        >
+                          Selected
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <div className="relative">
+                      <select
+                        id={selectId}
+                        className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200 ${
+                          isSelected ? "border-stone-500" : "border-stone-300"
+                        }`}
+                        value={selectedGroupVoice ?? ""}
+                        onChange={(event) => {
+                          setSelectedVoiceId(event.target.value);
+                          setStatusMessage("");
+                          setCacheStatus(null);
+                        }}
+                      >
+                        <option value="" disabled>
+                          {group.placeholder}
+                        </option>
+                        {groupVoices.map((voice) => (
+                          <option key={voice.id} value={voice.id}>
+                            {voice.name}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-stone-500"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <SpeechSpeedControl value={speed} onChange={setSpeed} />
+          </>
+        ) : null}
+      </div>
     </section>
   );
 };
+
+const VoiceListSkeleton = () => (
+  <div
+    className="grid gap-5 sm:grid-cols-2"
+    aria-label="Loading voices"
+    role="status"
+  >
+    {voiceGroups.map((group) => (
+      <div key={group.gender} className="motion-safe:animate-pulse">
+        <div className="mb-2 h-8 w-32 rounded-md bg-stone-200" />
+        <div className="h-12 w-full rounded-lg border border-stone-200 bg-stone-200" />
+      </div>
+    ))}
+  </div>
+);
