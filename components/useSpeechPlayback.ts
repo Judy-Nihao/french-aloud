@@ -7,6 +7,7 @@ let activePlayer: { player: StreamingAudioPlayer; stop: () => void } | null =
   null;
 
 type Options = {
+  onPlaybackStart?: (text: string) => void;
   speed?: number;
   onStatusChange?: (
     state: "loading" | "success" | "error",
@@ -19,12 +20,21 @@ export function useSpeechPlayback({
   speed = 1,
   onStatusChange,
   onCacheStatusChange,
+  onPlaybackStart,
 }: Options) {
   const playerRef = useRef<StreamingAudioPlayer | null>(null);
   const [state, setState] = useState<"idle" | "loading" | "playing">("idle");
-  const callbacks = useRef({ onStatusChange, onCacheStatusChange });
+  const callbacks = useRef({
+    onStatusChange,
+    onCacheStatusChange,
+    onPlaybackStart,
+  });
   useEffect(() => {
-    callbacks.current = { onStatusChange, onCacheStatusChange };
+    callbacks.current = {
+      onStatusChange,
+      onCacheStatusChange,
+      onPlaybackStart,
+    };
   });
   useEffect(() => {
     playerRef.current?.setSpeed(speed);
@@ -54,6 +64,7 @@ export function useSpeechPlayback({
     const player = new StreamingAudioPlayer(speed, () => {
       if (playerRef.current !== player) return;
       setState("playing");
+      callbacks.current.onPlaybackStart?.(payload.text);
       callbacks.current.onStatusChange?.("success", "");
     });
     playerRef.current = player;

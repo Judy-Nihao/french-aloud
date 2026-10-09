@@ -3,6 +3,7 @@
 import { useSpeechPlayback } from "@/components/useSpeechPlayback";
 
 type PlayAudioButtonProps = {
+  onPlaybackStart?: (text: string) => void;
   text: string;
   voiceId: string | null;
   voiceName: string | null;
@@ -23,11 +24,13 @@ export const PlayAudioButton = ({
   disabled = false,
   onStatusChange,
   onCacheStatusChange,
+  onPlaybackStart,
 }: PlayAudioButtonProps) => {
   const { state, play, stop } = useSpeechPlayback({
     speed,
     onStatusChange,
     onCacheStatusChange,
+    onPlaybackStart,
   });
   const busy = state !== "idle";
   const handleClick = () => {
