@@ -86,8 +86,27 @@ Do not use gender symbols. Preserve native dropdowns and readable option names.
 - The form section has no enclosing card. Speed controls use a subtle background
   without a separate border. Individual inputs retain usable outlines.
 
+## Reading flow and guidance
+
+```text
+Title + Recent readings
+  -> French text label + Copy
+  -> Editor with prefilled French
+  -> Read aloud
+  -> Voice selection
+  -> Playback speed
+```
+
+Keep the visible `French text` label. The editor retains its prefilled French;
+`Type or paste French text…` appears only when empty. Do not add a redundant
+full-flow explanation below the title.
+
 ## Interaction states
 
+- Play action icons: `Volume2` with `Read aloud`, `X` with `Cancel` while
+  generating, and `Square` with `Stop playback` while playing. Place the 20 px
+  icon before the text with an 8 px gap. Icons are decorative (`aria-hidden`);
+  visible text supplies the accessible button name.
 - Primary play button: ink background, surface text, lighter hover. Disabled
   state uses the control border background and secondary text.
 - Shared quiet/icon buttons: hover background and visible keyboard focus.
