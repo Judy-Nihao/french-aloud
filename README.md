@@ -112,3 +112,9 @@ History stores text and playback timestamps in this browser's localStorage, not
 audio. It survives reloads but does not sync across devices or browsers. Clearing
 site data removes it. If browser storage is blocked, history works for the current
 visit and the drawer explains that it cannot persist.
+
+### Development conventions
+
+Read [docs/development.md](docs/development.md) before implementing or refactoring.
+It defines Tailwind token ownership, shared UI components, inline-style restrictions,
+verification expectations, and the preferred use of ASCII diagrams in explanations.
