@@ -131,3 +131,7 @@ CSS changes. Browser viewport emulation is not physical iPhone testing.
 The history tab is flush with the panel right edge. Its left shoulder curves
 into the top border; the rounded upper-right corner continues vertically into
 the panel right border. The panel upper-right corner is square at this join.
+
+Hover backgrounds are achromatic light gray: hover uses OKLCH 0.955 / 0 / 0,
+and soft (pressed/badge emphasis) uses 0.925 / 0 / 0, matching the speed badge.
+Do not introduce purple-tinted neutral interaction backgrounds.

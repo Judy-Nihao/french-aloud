@@ -6,8 +6,8 @@
   --font-sans: system-ui, sans-serif;
   --color-canvas: oklch(0.946 0.002 270);
   --color-surface: oklch(0.989 0.002 95);
-  --color-hover: oklch(0.956 0.006 290);
-  --color-soft: oklch(0.93 0.014 290);
+  --color-hover: oklch(0.955 0 0);
+  --color-soft: oklch(0.925 0 0);
   --color-border: oklch(0.62 0.004 270);
   --color-border-control: oklch(0.49 0.004 270);
   --color-border-active: oklch(0.245 0.003 270);
