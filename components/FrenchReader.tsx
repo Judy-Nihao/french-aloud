@@ -43,7 +43,7 @@ const voiceGroups: Array<{
     gender: "female",
     label: "Female voices",
     labelClassName: "bg-female-label text-female-ink",
-    selectedClassName: "border-female-border bg-female-surface/70",
+    selectedClassName: "border-female-border bg-female-surface",
     selectedLabelClassName: "text-female-selected",
     placeholder: "Choose a female voice",
   },
@@ -51,7 +51,7 @@ const voiceGroups: Array<{
     gender: "male",
     label: "Male voices",
     labelClassName: "bg-male-label text-male-ink",
-    selectedClassName: "border-male-border bg-male-surface/70",
+    selectedClassName: "border-male-border bg-male-surface",
     selectedLabelClassName: "text-male-selected",
     placeholder: "Choose a male voice",
   },
@@ -241,7 +241,7 @@ export const FrenchReader = () => {
                   return (
                     <div
                       key={group.gender}
-                      className={`rounded-control border p-3 transition-colors duration-200 ${
+                      className={`rounded-control border p-3 transition-colors duration-200 motion-reduce:transition-none ${
                         isSelected
                           ? group.selectedClassName
                           : "border-transparent"
@@ -250,7 +250,7 @@ export const FrenchReader = () => {
                     >
                       <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
                         <label
-                          className={`inline-flex min-h-8 items-center rounded-md px-3 py-1.5 text-sm font-semibold ${group.labelClassName}`}
+                          className={`inline-flex min-h-8 items-center rounded-md px-3 py-1.5 text-sm font-medium ${group.labelClassName}`}
                           htmlFor={selectId}
                         >
                           {group.label}

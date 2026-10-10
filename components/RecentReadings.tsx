@@ -43,7 +43,7 @@ export function RecentReadings({
           className={`fixed inset-0 z-50 flex ${desktop ? "justify-end" : "items-end"}`}
         >
           <Drawer.Popup
-            className={`reading-drawer-popup flex flex-col border border-border bg-canvas text-strong shadow-drawer outline-none ${desktop ? "h-full w-96 max-w-full" : "max-h-[85dvh] w-full rounded-t-panel"}`}
+            className={`reading-drawer-popup flex flex-col border border-border bg-surface text-strong shadow-drawer outline-none ${desktop ? "h-full w-96 max-w-full" : "max-h-[85dvh] w-full rounded-t-panel"}`}
           >
             <Drawer.Content className="flex min-h-0 flex-1 flex-col">
               {!desktop && (
@@ -54,7 +54,7 @@ export function RecentReadings({
               )}
               <div className="px-6 pt-5 pb-4">
                 <div className="flex items-center justify-between gap-3">
-                  <Drawer.Title className="text-xl font-semibold">
+                  <Drawer.Title className="text-xl font-medium">
                     Recent readings
                   </Drawer.Title>
                   <Drawer.Close
@@ -64,7 +64,7 @@ export function RecentReadings({
                     <X className="h-4 w-4" aria-hidden="true" />
                   </Drawer.Close>
                 </div>
-                <Drawer.Description className="text-canvas0 mt-2 text-sm">
+                <Drawer.Description className="mt-2 text-sm text-secondary">
                   Your last 10 texts, saved in this browser.
                 </Drawer.Description>
                 {storageError && (
@@ -76,7 +76,7 @@ export function RecentReadings({
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6">
                 {!readings.length && (
-                  <p className="text-canvas0 py-8 text-sm">
+                  <p className="py-8 text-sm text-secondary">
                     Texts appear here when playback starts.
                   </p>
                 )}
@@ -89,7 +89,7 @@ export function RecentReadings({
                           type="button"
                           aria-pressed={selected}
                           onClick={() => onRestore(reading.text)}
-                          className={`w-full cursor-pointer rounded-control border p-4 pr-14 text-left transition-[opacity,border-color,background-color] duration-150 focus-visible:ring-2 focus-visible:ring-focus focus-visible:outline-none active:opacity-70 motion-reduce:transition-none ${selected ? "border-border-active bg-soft/60 opacity-100" : "border-border bg-hover/40 opacity-80 hover:border-border-control hover:bg-soft/40 hover:opacity-100"}`}
+                          className={`w-full cursor-pointer rounded-control border p-4 pr-14 text-left transition-[border-color,background-color] duration-150 focus-visible:ring-2 focus-visible:ring-focus focus-visible:outline-none active:bg-soft motion-reduce:transition-none ${selected ? "border-border-active bg-hover" : "border-border/50 bg-surface hover:border-border-control hover:bg-hover"}`}
                         >
                           <span
                             lang="fr"
