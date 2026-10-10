@@ -42,23 +42,22 @@ const voiceGroups: Array<{
   {
     gender: "female",
     label: "Female voices",
-    labelClassName: "bg-rose-100 text-rose-900",
-    selectedClassName: "border-rose-300 bg-rose-50/70",
-    selectedLabelClassName: "text-rose-800",
+    labelClassName: "bg-female-label text-female-ink",
+    selectedClassName: "border-female-border bg-female-surface/70",
+    selectedLabelClassName: "text-female-selected",
     placeholder: "Choose a female voice",
   },
   {
     gender: "male",
     label: "Male voices",
-    labelClassName: "bg-sky-100 text-sky-900",
-    selectedClassName: "border-sky-300 bg-sky-50/70",
-    selectedLabelClassName: "text-sky-800",
+    labelClassName: "bg-male-label text-male-ink",
+    selectedClassName: "border-male-border bg-male-surface/70",
+    selectedLabelClassName: "text-male-selected",
     placeholder: "Choose a male voice",
   },
 ];
 
 export const FrenchReader = () => {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [text, setText] = useState(
     "J’apprends le français parce que j’aime trop comment ça sonne.",
   );
@@ -99,13 +98,6 @@ export const FrenchReader = () => {
       setStorageError(true);
     }
   };
-
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-    textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }, [text]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -157,7 +149,7 @@ export const FrenchReader = () => {
     <>
       <header>
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
             French Aloud
           </h1>
           <div className="ml-auto shrink-0">
@@ -180,15 +172,15 @@ export const FrenchReader = () => {
             />
           </div>
         </div>
-        <p className="mt-4 text-base leading-7 text-slate-700">
+        <p className="mt-4 text-base leading-7 text-body">
           Type a French phrase, choose a voice, and hear it read aloud.
         </p>
       </header>
-      <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+      <section className="mt-8 rounded-section border border-border bg-canvas p-4 sm:p-5">
         <div className="grid gap-3">
           <div className="flex items-center justify-between gap-3">
             <label
-              className="text-sm font-medium text-slate-700"
+              className="text-sm font-medium text-body"
               htmlFor="french-text"
             >
               French text
@@ -197,9 +189,8 @@ export const FrenchReader = () => {
           </div>
           <textarea
             id="french-text"
-            ref={textareaRef}
-            className="min-h-32 w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-3 text-lg leading-7 text-slate-950 outline-none placeholder:text-slate-400 focus:border-slate-500 focus:ring-4 focus:ring-slate-200"
-            style={{ overflow: "hidden" }}
+            className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border-control bg-surface px-3 py-3 text-lg leading-7 text-ink outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft"
+            rows={4}
             value={text}
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
               setText(event.target.value);
@@ -214,13 +205,13 @@ export const FrenchReader = () => {
 
           {voiceListStatus === "error" ? (
             <div
-              className="rounded-lg border border-stone-300 bg-stone-50 px-4 py-4"
+              className="rounded-lg border border-control-outline bg-control-surface px-4 py-4"
               role="alert"
             >
-              <p className="text-sm text-stone-700">{voiceListError}</p>
+              <p className="text-sm text-control-body">{voiceListError}</p>
               <button
                 type="button"
-                className="mt-3 inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-stone-300 bg-stone-100 px-3 py-2 text-sm font-medium text-stone-800 hover:bg-stone-200 focus-visible:ring-2 focus-visible:ring-stone-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="mt-3 inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-control-outline bg-control-hover px-3 py-2 text-sm font-medium text-control-strong hover:bg-control-soft focus-visible:ring-2 focus-visible:ring-control-focus focus-visible:ring-offset-2 focus-visible:outline-none"
                 onClick={() => {
                   setVoiceListStatus("loading");
                   setLoadAttempt((attempt) => attempt + 1);
@@ -250,7 +241,7 @@ export const FrenchReader = () => {
                   return (
                     <div
                       key={group.gender}
-                      className={`rounded-xl border p-3 transition-colors duration-200 ${
+                      className={`rounded-control border p-3 transition-colors duration-200 ${
                         isSelected
                           ? group.selectedClassName
                           : "border-transparent"
@@ -277,8 +268,10 @@ export const FrenchReader = () => {
                       <div className="relative">
                         <select
                           id={selectId}
-                          className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-stone-50 px-4 py-3 pr-11 text-sm font-medium text-stone-900 transition-colors duration-150 outline-none hover:bg-stone-100 focus:border-stone-500 focus:ring-2 focus:ring-stone-200 ${
-                            isSelected ? "border-stone-500" : "border-stone-300"
+                          className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-control-surface px-4 py-3 pr-11 text-sm font-medium text-control-ink transition-colors duration-150 outline-none hover:bg-control-hover focus:border-control-focus focus:ring-2 focus:ring-control-soft ${
+                            isSelected
+                              ? "border-control-focus"
+                              : "border-control-outline"
                           }`}
                           value={selectedGroupVoice ?? ""}
                           onChange={(event) => {
@@ -297,7 +290,7 @@ export const FrenchReader = () => {
                           ))}
                         </select>
                         <ChevronDown
-                          className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-stone-500"
+                          className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-control-muted"
                           aria-hidden="true"
                         />
                       </div>
@@ -329,9 +322,9 @@ export const FrenchReader = () => {
 
         <div aria-live="polite">
           {cacheStatus ? (
-            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-medium text-stone-500">
+            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-control-border bg-control-surface px-2.5 py-1 text-xs font-medium text-control-muted">
               <span
-                className="h-1.5 w-1.5 rounded-full bg-stone-400"
+                className="h-1.5 w-1.5 rounded-full bg-control-dot"
                 aria-hidden="true"
               />
               API ·{" "}
@@ -342,7 +335,7 @@ export const FrenchReader = () => {
 
         <div aria-live="polite">
           {statusMessage ? (
-            <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2.5 text-sm text-stone-600">
+            <p className="mt-3 rounded-lg bg-control-hover px-3 py-2.5 text-sm text-control-secondary">
               {statusMessage}
             </p>
           ) : null}
@@ -360,8 +353,8 @@ const VoiceListSkeleton = () => (
   >
     {voiceGroups.map((group) => (
       <div key={group.gender} className="motion-safe:animate-pulse">
-        <div className="mb-2 h-8 w-32 rounded-md bg-stone-200" />
-        <div className="h-12 w-full rounded-lg border border-stone-200 bg-stone-200" />
+        <div className="mb-2 h-8 w-32 rounded-md bg-control-soft" />
+        <div className="h-12 w-full rounded-lg border border-control-border bg-control-soft" />
       </div>
     ))}
   </div>

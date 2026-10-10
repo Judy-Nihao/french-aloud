@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-export const quietButton =
-  "min-h-11 cursor-pointer rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 disabled:cursor-not-allowed disabled:opacity-40";
+import { Button } from "@/components/ui/Button";
 
 export function CopyTextButton({ text }: { text: string }) {
   const [status, setStatus] = useState("Copy");
@@ -15,9 +13,7 @@ export function CopyTextButton({ text }: { text: string }) {
     [],
   );
   return (
-    <button
-      type="button"
-      className={quietButton}
+    <Button
       disabled={!text.trim()}
       onClick={async () => {
         if (timer.current) clearTimeout(timer.current);
@@ -31,6 +27,6 @@ export function CopyTextButton({ text }: { text: string }) {
       }}
     >
       <span aria-live="polite">{status}</span>
-    </button>
+    </Button>
   );
 }

@@ -1,11 +1,59 @@
 @import "tailwindcss";
 
-:root {
-  color-scheme: light;
-  background-color: #f8fafc;
-  color: #0f172a;
+/* Shared visual values. Keep component layout in Tailwind className. */
+@theme inline {
+  --font-sans: system-ui, sans-serif;
+  --color-canvas: var(--color-slate-50);
+  --color-surface: var(--color-white);
+  --color-hover: var(--color-slate-100);
+  --color-soft: var(--color-slate-200);
+  --color-border: var(--color-slate-200);
+  --color-border-control: var(--color-slate-300);
+  --color-border-active: var(--color-slate-400);
+  --color-focus: var(--color-slate-400);
+  --color-placeholder: var(--color-slate-400);
+  --color-muted: var(--color-slate-500);
+  --color-secondary: var(--color-slate-600);
+  --color-body: var(--color-slate-700);
+  --color-strong: var(--color-slate-900);
+  --color-ink: var(--color-slate-950);
+  --color-primary-hover: var(--color-slate-800);
+  --color-control-surface: var(--color-stone-50);
+  --color-control-hover: var(--color-stone-100);
+  --color-control-soft: var(--color-stone-200);
+  --color-control-border: var(--color-stone-200);
+  --color-control-outline: var(--color-stone-300);
+  --color-control-focus: var(--color-stone-500);
+  --color-control-muted: var(--color-stone-500);
+  --color-control-secondary: var(--color-stone-600);
+  --color-control-body: var(--color-stone-700);
+  --color-control-strong: var(--color-stone-800);
+  --color-control-ink: var(--color-stone-900);
+  --color-control-dot: var(--color-stone-400);
+  --color-female-label: var(--color-rose-100);
+  --color-female-ink: var(--color-rose-900);
+  --color-female-border: var(--color-rose-300);
+  --color-female-surface: var(--color-rose-50);
+  --color-female-selected: var(--color-rose-800);
+  --color-male-label: var(--color-sky-100);
+  --color-male-ink: var(--color-sky-900);
+  --color-male-border: var(--color-sky-300);
+  --color-male-surface: var(--color-sky-50);
+  --color-male-selected: var(--color-sky-800);
+  --shadow-panel: var(--shadow-lg);
+  --shadow-drawer: var(--shadow-xl);
+  --radius-panel: var(--radius-3xl);
+  --radius-section: var(--radius-2xl);
+  --radius-control: var(--radius-xl);
 }
 
+:root {
+  color-scheme: light;
+  background-color: var(--color-canvas);
+  color: var(--color-strong);
+}
+
+/* Global document defaults and the iOS Drawer positioning prerequisite. */
 html {
   min-height: 100%;
 }
@@ -14,9 +62,9 @@ body {
   position: relative;
   min-height: 100%;
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background-color: #f8fafc;
-  color: #0f172a;
+  font-family: var(--font-sans);
+  background-color: var(--color-canvas);
+  color: var(--color-strong);
 }
 
 * {
