@@ -1,6 +1,7 @@
 # French Aloud development conventions
 
-Read this document before implementing or refactoring the application. These are
+Read this document before implementing or refactoring the application. Read
+[DESIGN.md](../DESIGN.md) for the current visual specification. These are
 project rules for coding agents and human contributors. Explicit user instructions
 take precedence. Keep this document aligned with the actual code.
 
@@ -75,18 +76,16 @@ Their values live in `app/globals.css`, rather than in each consumer.
        +--> future surface changes happen at the token source
 ```
 
-The initial tokens alias the existing Tailwind colors using `@theme inline`, so
-this foundation change preserves the existing slate / stone / rose / sky palette.
-The later warm-neutral redesign must change these token values, not scatter
-new literal colors through JSX. When introducing custom colors, use OKLCH.
+Tokens use OKLCH warm neutrals with restrained rose / sky category cues.
+`control-*` roles alias the base palette using `@theme inline`. Change values at
+the token source rather than scattering literal colors through JSX.
 
 Token groups:
 
 - Base roles: `canvas`, `surface`, `hover`, `soft`, `ink`, `strong`, `body`,
   `secondary`, `muted`, `placeholder`, borders, focus and primary hover.
-- `control-*`: the existing stone-colored voice controls, speed panel and status
-  feedback. These preserve their current look; later redesign can align their
-  values with base roles without changing every component.
+- `control-*`: voice controls, speed panel and status feedback. These alias the
+  shared warm-neutral base roles.
 - `female-*` / `male-*`: category label, selected surface, outline and text.
   Preserve explicit selected text as well as color cues.
 - `font-sans`: `system-ui, sans-serif`. Do not introduce a downloadable font as part
