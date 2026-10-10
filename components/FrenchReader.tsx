@@ -149,7 +149,7 @@ export const FrenchReader = () => {
     <>
       <header>
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-          <h1 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+          <h1 className="text-3xl font-medium tracking-tight text-ink sm:text-4xl">
             French Aloud
           </h1>
           <div className="ml-auto shrink-0">
@@ -172,11 +172,11 @@ export const FrenchReader = () => {
             />
           </div>
         </div>
-        <p className="mt-4 text-base leading-7 text-body">
+        <p className="mt-3 max-w-prose text-base leading-7 text-body">
           Type a French phrase, choose a voice, and hear it read aloud.
         </p>
       </header>
-      <section className="mt-8 rounded-section border border-border bg-canvas p-4 sm:p-5">
+      <section className="mt-9 sm:mt-10">
         <div className="grid gap-3">
           <div className="flex items-center justify-between gap-3">
             <label
@@ -189,7 +189,7 @@ export const FrenchReader = () => {
           </div>
           <textarea
             id="french-text"
-            className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border-control bg-surface px-3 py-3 text-lg leading-7 text-ink outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft"
+            className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border-control bg-surface px-4 py-4 text-lg leading-8 text-ink outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft"
             rows={4}
             value={text}
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
