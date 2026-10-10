@@ -76,8 +76,8 @@ Their values live in `app/globals.css`, rather than in each consumer.
        +--> future surface changes happen at the token source
 ```
 
-Tokens use OKLCH neutrals with purple voice labels, yellow selection cues,
-green playing feedback and earth-toned speed badges.
+Tokens use OKLCH neutrals with a neutral-gray history tab, rose / sky voice cues,
+green playing feedback and pale-gray speed controls.
 `control-*` roles alias the base palette using `@theme inline`. Change values at
 the token source rather than scattering literal colors through JSX.
 
@@ -87,9 +87,10 @@ Token groups:
   `secondary`, `muted`, `placeholder`, borders, focus and primary hover.
 - `control-*`: voice controls, speed panel and status feedback. These alias the
   shared cool-neutral base roles.
-- `female-*` / `male-*`: category label, selected surface, outline and text. Both groups
-  currently share the same brand palette.
+- `female-*` / `male-*`: category label, selected surface, outline and text. Preserve their distinct
+  rose / sky palettes.
   Preserve explicit selected text as well as color cues.
+- `font-heading`: self-hosted Baskervville SemiBold for the brand title only.
 - `font-sans`: `system-ui, sans-serif`. Do not introduce a downloadable font as part
   of an unrelated refactor.
 - `shadow-panel` / `shadow-drawer`: shared elevation roles.
@@ -129,7 +130,8 @@ its CSS variables rather than rewriting the library's positioning system.
 - `quiet`: text actions such as Copy.
 - `icon`: per-reading delete, with a consistent 44 px target.
 - `icon-circle`: Drawer close, with a circular outline and subtle shared shadow.
-- `pill`: Recent readings, with its visible capsule outline.
+- `pill`: general capsule actions.
+- `tab`: Recent readings, attached above the main panel.
 
 Use these variants through the shared Button. Feature components still own their
 labels and behavior. Use Base UI's `render` composition for Drawer triggers and

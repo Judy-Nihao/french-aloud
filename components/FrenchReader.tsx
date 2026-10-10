@@ -148,11 +148,11 @@ export const FrenchReader = () => {
   return (
     <>
       <header>
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-          <h1 className="text-3xl font-medium tracking-tight text-ink sm:text-4xl">
+        <div className="pt-5 sm:pt-3">
+          <h1 className="text-center font-heading text-4xl leading-tight font-semibold text-ink sm:text-6xl">
             French Aloud
           </h1>
-          <div className="ml-auto shrink-0">
+          <div className="absolute -top-11 right-6 -translate-y-[0.5px] sm:right-8">
             <RecentReadings
               readings={readings}
               storageError={storageError}
@@ -272,7 +272,7 @@ export const FrenchReader = () => {
 
                         {isSelected ? (
                           <span
-                            className={`rounded-full bg-selection px-2 py-1 text-xs font-medium ${group.selectedLabelClassName}`}
+                            className={`text-xs font-semibold ${group.selectedLabelClassName}`}
                           >
                             Selected
                           </span>

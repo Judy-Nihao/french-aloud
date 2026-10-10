@@ -34,7 +34,7 @@ export function RecentReadings({
       onOpenChange={setOpen}
       swipeDirection={desktop ? "right" : "down"}
     >
-      <Drawer.Trigger render={<Button variant="pill" />}>
+      <Drawer.Trigger render={<Button variant="tab" />}>
         Recent readings{readings.length ? ` (${readings.length})` : ""}
       </Drawer.Trigger>
       <Drawer.Portal>

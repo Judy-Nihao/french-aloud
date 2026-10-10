@@ -3,12 +3,12 @@
 ## Direction
 
 An uncluttered French reading tool for learners practicing in ordinary indoor
-light. Use purple labels, near-black text and fine outlines, yellow selection
-badges, green playing feedback and small earth-toned speed badges. Keep large
+light. Use a neutral-gray history tab, near-black text and fine outlines, rose / sky voice
+cues, green playing feedback and pale-gray speed controls. Keep large
 near-white surfaces and cool-gray surroundings.
 
-Keep system fonts. Do not add decorative animation or downloadable fonts without
-an explicit design decision. Preserve the single-column page, native voice
+Use self-hosted Baskervville SemiBold for the centered brand title; keep system
+fonts for controls and French content. Do not add decorative animation. Preserve the single-column page, native voice
 dropdowns, local playback speed and recent-reading drawer.
 
 ## Source of truth
@@ -31,8 +31,8 @@ component conventions change. Follow [development conventions](docs/development.
 ## Palette
 
 Tokens in app/globals.css are the source of truth. Neutrals are low-chroma;
-purple labels, yellow selection badges, green playing feedback and earth-toned
-speed badges provide deliberate accents.
+a neutral-gray history tab, rose / sky voice labels and green playing feedback
+provide deliberate accents.
 
 | Token          | Value                    |
 | -------------- | ------------------------ |
@@ -47,20 +47,26 @@ speed badges provide deliberate accents.
 | success        | `oklch(0.53 0.13 150)`   |
 | earth          | `oklch(0.69 0.04 85)`    |
 
-Both voice groups share purple labels and near-black text. Keep explicit
-Female/Male names, Selected text and native dropdowns.
+Voice groups use Tailwind rose-100 / sky-100 labels, rose-900 / sky-900 text,
+rose-300 / sky-300 selected borders and rose-50 / sky-50 selected surfaces.
+Selected text uses rose-800 / sky-800 without a yellow badge. Keep explicit
+Female/Male names, Selected text and native dropdowns. Speed controls use achromatic control-surface (0.982)
+and control-soft (0.925) backgrounds rather than an earth-colored badge.
 
 ## Typography and spacing
 
-- Family: `system-ui, sans-serif`.
-- Main title: 30 px, 36 px from the small breakpoint, medium weight and tight
-  tracking. Drawer title: 20 px, medium weight.
+- UI family: `system-ui, sans-serif`. Brand title: self-hosted Baskervville SemiBold
+  via next/font/google, with Georgia fallback. Next.js downloads fonts at build
+  time and serves them from the application; browsers do not contact Google.
+- Main title: centered, 36 px mobile and 60 px from the small breakpoint, 600
+  weight and natural letter spacing. Drawer title: 20 px, medium weight.
 - French editor: 18 px, 32 px line height. History French: 16 px, 28 px line height.
 - Supporting text: 14–16 px. Keep French letter spacing normal.
 - Main shell: max width 48 rem; padding 20 px mobile and 40 px from the small
   breakpoint. Header-to-editor section gap: 36 px mobile and 40 px desktop.
-- Recent readings stays at the header's right edge; wrapping is allowed at narrow
-  widths. Voice groups become two columns at the small breakpoint.
+- Recent readings is a purple tab attached above the panel near its right edge.
+  Page top padding reserves its height. Voice groups become two columns at the
+  small breakpoint.
 - The editor grows with content using `field-sizing-content`; keep scroll/manual
   resize fallback. Preserve comfortable spacing between editor, voices and play.
 
@@ -97,7 +103,9 @@ full-flow explanation below the title.
   success green with a darker hover. Disabled
   state uses the control border background and secondary text.
 - Shared quiet/icon buttons: hover background and visible keyboard focus.
-- Recent readings trigger: full capsule outline and minimum 44 px height.
+- Recent readings trigger: neutral-gray tab with a curved left and right shoulders that joins the panel top edge. A decorative SVG supplies the
+  silhouette and fine outline without a bottom border. Keep a 44 px minimum
+  height and leave panel overflow visible.
 - History cards: surface background and faint border by default; hover darkens
   background and border; selected uses the active border and selection-soft background.
   Pressed uses soft background. Do not fade the whole card or its French text.

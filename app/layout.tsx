@@ -1,5 +1,14 @@
+import { Baskervville } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
+
+const headingFont = Baskervville({
+  subsets: ["latin"],
+  weight: "600",
+  style: "normal",
+  display: "swap",
+  variable: "--font-baskervville",
+});
 
 export const metadata: Metadata = {
   title: "French Aloud",
@@ -8,7 +17,7 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en">
+    <html lang="en" className={headingFont.variable}>
       <body>{children}</body>
     </html>
   );
