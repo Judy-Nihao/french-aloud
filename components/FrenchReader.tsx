@@ -206,7 +206,7 @@ export const FrenchReader = () => {
           speed={speed}
           disabled={voiceListStatus !== "ready"}
           onStatusChange={(state, message) => {
-            setStatusMessage(state === "success" ? "" : message);
+            setStatusMessage(state === "error" ? message : "");
           }}
           onCacheStatusChange={setCacheStatus}
           onPlaybackStart={(playedText) =>

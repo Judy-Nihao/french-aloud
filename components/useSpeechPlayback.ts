@@ -70,7 +70,6 @@ export function useSpeechPlayback({
     playerRef.current = player;
     activePlayer = { player, stop };
     setState("loading");
-    callbacks.current.onCacheStatusChange?.(null);
     callbacks.current.onStatusChange?.("loading", `Preparing ${name}...`);
     try {
       await player.play(payload, (cache) => {
