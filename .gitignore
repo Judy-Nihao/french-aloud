@@ -48,3 +48,6 @@ next-env.d.ts
 # local browser verification artifacts
 /.playwright-cli/
 /output/playwright/
+
+# personal design references
+/docs/design/
