@@ -190,8 +190,9 @@ Keep history local to this browser; it is not an audio archive or cloud sync.
 
 Use `npm run lint`, `npx tsc --noEmit`, and tests relevant to changed behavior.
 For changes that affect the production CSS or component integration, run a
-production build. `npx next build --webpack` is the verified build fallback when
-Turbopack cannot operate in the local sandbox.
+production build with `npm run build`. Both dev and build scripts explicitly use
+webpack so local checks and Vercel use the same compiler. Do not silently switch
+compilers: verify emitted theme utilities and font loading before changing this.
 
 Prettier uses `prettier-plugin-tailwindcss` with `app/globals.css` as its stylesheet.
 Format only edited files rather than changing unrelated files.
@@ -251,3 +252,9 @@ base: mobile defaults, explicit font size where needed
   -> md: tablet layout and explicit type scale
   -> lg: larger desktop heading
 ```
+
+When deployment styles differ, compare the deployed HTML and CSS, not only
+source class names. Verify font-heading and semantic color utilities exist in
+the emitted stylesheet. Confirm the deployed commit and Vercel Build Command
+uses npm run build (not a next build override). A first deployment after changing
+the build pipeline should run without the previous build cache.

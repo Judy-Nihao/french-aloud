@@ -118,3 +118,11 @@ visit and the drawer explains that it cannot persist.
 Read [docs/development.md](docs/development.md) before implementing or refactoring.
 It defines Tailwind token ownership, shared UI components, inline-style restrictions,
 verification expectations, and the preferred use of ASCII diagrams in explanations.
+
+### Build consistency
+
+Development and production use webpack explicitly through `npm run dev` and
+`npm run build`. On Vercel, use `npm run build` as the Build Command; remove any
+`next build` override. When switching from a previous compiler/cache, redeploy
+without the existing build cache. Baskervville is downloaded by next/font/google
+at build time and served by the application.
