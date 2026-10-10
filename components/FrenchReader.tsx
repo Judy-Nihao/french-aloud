@@ -272,7 +272,7 @@ export const FrenchReader = () => {
 
                         {isSelected ? (
                           <span
-                            className={`text-xs font-semibold ${group.selectedLabelClassName}`}
+                            className={`rounded-full bg-selection px-2 py-1 text-xs font-medium ${group.selectedLabelClassName}`}
                           >
                             Selected
                           </span>

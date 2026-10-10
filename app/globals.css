@@ -3,21 +3,21 @@
 /* Shared visual values. Keep component layout in Tailwind className. */
 @theme inline {
   --font-sans: system-ui, sans-serif;
-  --color-canvas: oklch(0.931 0.006 75);
-  --color-surface: oklch(0.991 0.002 75);
-  --color-hover: oklch(0.965 0.004 75);
-  --color-soft: oklch(0.915 0.008 75);
-  --color-border: oklch(0.88 0.009 75);
-  --color-border-control: oklch(0.8 0.012 75);
-  --color-border-active: oklch(0.6 0.015 75);
-  --color-focus: oklch(0.48 0.012 75);
-  --color-placeholder: oklch(0.5 0.012 75);
-  --color-muted: oklch(0.5 0.012 75);
-  --color-secondary: oklch(0.48 0.012 75);
-  --color-body: oklch(0.43 0.012 75);
-  --color-strong: oklch(0.25 0.006 75);
-  --color-ink: oklch(0.2 0.006 75);
-  --color-primary-hover: oklch(0.3 0.008 75);
+  --color-canvas: oklch(0.946 0.002 270);
+  --color-surface: oklch(0.989 0.002 95);
+  --color-hover: oklch(0.956 0.006 290);
+  --color-soft: oklch(0.93 0.014 290);
+  --color-border: oklch(0.62 0.004 270);
+  --color-border-control: oklch(0.49 0.004 270);
+  --color-border-active: oklch(0.245 0.003 270);
+  --color-focus: oklch(0.47 0.12 290);
+  --color-placeholder: oklch(0.49 0.004 270);
+  --color-muted: oklch(0.49 0.004 270);
+  --color-secondary: oklch(0.46 0.004 270);
+  --color-body: oklch(0.37 0.004 270);
+  --color-strong: oklch(0.245 0.003 270);
+  --color-ink: oklch(0.245 0.003 270);
+  --color-primary-hover: oklch(0.34 0.006 270);
   --color-control-surface: var(--color-hover);
   --color-control-hover: var(--color-canvas);
   --color-control-soft: var(--color-soft);
@@ -30,24 +30,25 @@
   --color-control-strong: var(--color-strong);
   --color-control-ink: var(--color-ink);
   --color-control-dot: var(--color-muted);
-  --color-female-label: oklch(0.94 0.025 15);
-  --color-female-ink: oklch(0.38 0.1 15);
-  --color-female-border: oklch(0.72 0.09 15);
-  --color-female-surface: oklch(0.98 0.008 15);
-  --color-female-selected: var(--color-female-ink);
-  --color-male-label: oklch(0.94 0.025 235);
-  --color-male-ink: oklch(0.38 0.075 235);
-  --color-male-border: oklch(0.72 0.075 235);
-  --color-male-surface: oklch(0.98 0.008 235);
-  --color-male-selected: var(--color-male-ink);
-  --shadow-control: 0 1px 3px oklch(0.25 0.006 75 / 0.08);
-  --shadow-panel:
-    0 0 0 0.5px oklch(0.25 0.006 75 / 0.12),
-    0 2px 4px oklch(0.25 0.006 75 / 0.04),
-    0 6px 16px oklch(0.25 0.006 75 / 0.04);
-  --shadow-drawer:
-    0 0 0 0.5px oklch(0.25 0.006 75 / 0.12),
-    0 8px 32px oklch(0.25 0.006 75 / 0.08);
+  --color-brand: oklch(0.71 0.15 295);
+  --color-selection: oklch(0.84 0.17 85);
+  --color-selection-soft: oklch(0.977 0.025 85);
+  --color-success: oklch(0.53 0.13 150);
+  --color-success-hover: oklch(0.46 0.11 150);
+  --color-earth: oklch(0.69 0.04 85);
+  --color-female-label: var(--color-brand);
+  --color-female-ink: var(--color-ink);
+  --color-female-border: var(--color-ink);
+  --color-female-surface: var(--color-selection-soft);
+  --color-female-selected: var(--color-ink);
+  --color-male-label: var(--color-brand);
+  --color-male-ink: var(--color-ink);
+  --color-male-border: var(--color-ink);
+  --color-male-surface: var(--color-selection-soft);
+  --color-male-selected: var(--color-ink);
+  --shadow-control: 0 1px 2px oklch(0.245 0.003 270 / 0.04);
+  --shadow-panel: 0 2px 6px oklch(0.245 0.003 270 / 0.025);
+  --shadow-drawer: 0 4px 16px oklch(0.245 0.003 270 / 0.06);
   --radius-panel: 1.5rem;
   --radius-section: 1rem;
   --radius-control: 0.75rem;

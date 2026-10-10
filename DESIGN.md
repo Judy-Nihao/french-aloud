@@ -3,9 +3,9 @@
 ## Direction
 
 An uncluttered French reading tool for learners practicing in ordinary indoor
-light. Use warm matte neutrals, readable text, generous spacing and subtle panel
-elevation. The interface serves the reading task. Rose and sky identify voice
-groups in small labels and selected states.
+light. Use purple labels, near-black text and fine outlines, yellow selection
+badges, green playing feedback and small earth-toned speed badges. Keep large
+near-white surfaces and cool-gray surroundings.
 
 Keep system fonts. Do not add decorative animation or downloadable fonts without
 an explicit design decision. Preserve the single-column page, native voice
@@ -28,39 +28,27 @@ component className: layout, spacing, responsive and interactive states
 Values below describe the implementation. Update this file when the tokens or
 component conventions change. Follow [development conventions](docs/development.md).
 
-## Neutral palette
+## Palette
 
-All base neutrals use OKLCH hue 75 with low chroma. Values are declared in
-`app/globals.css`; do not duplicate literal colors in components.
+Tokens in app/globals.css are the source of truth. Neutrals are low-chroma;
+purple labels, yellow selection badges, green playing feedback and earth-toned
+speed badges provide deliberate accents.
 
-| Role                | OKLCH            | Purpose                                     |
-| ------------------- | ---------------- | ------------------------------------------- |
-| canvas              | `0.931 0.006 75` | Page background                             |
-| surface             | `0.991 0.002 75` | Main panel, editor, Drawer                  |
-| hover               | `0.965 0.004 75` | Quiet hover and selected history background |
-| soft                | `0.915 0.008 75` | Small badges and pressed feedback           |
-| border              | `0.88 0.009 75`  | Light surface outlines                      |
-| border-control      | `0.80 0.012 75`  | Form control outlines                       |
-| border-active       | `0.60 0.015 75`  | Selected history outline                    |
-| focus / secondary   | `0.48 0.012 75`  | Keyboard focus and secondary actions        |
-| muted / placeholder | `0.50 0.012 75`  | Supporting text                             |
-| body                | `0.43 0.012 75`  | Description text                            |
-| strong              | `0.25 0.006 75`  | Labels and strong text                      |
-| ink                 | `0.20 0.006 75`  | French text, title, primary button          |
-| primary-hover       | `0.30 0.008 75`  | Primary button hover                        |
+| Token          | Value                    |
+| -------------- | ------------------------ |
+| canvas         | `oklch(0.946 0.002 270)` |
+| surface        | `oklch(0.989 0.002 95)`  |
+| ink            | `oklch(0.245 0.003 270)` |
+| border         | `oklch(0.62 0.004 270)`  |
+| border-control | `oklch(0.49 0.004 270)`  |
+| brand          | `oklch(0.71 0.15 295)`   |
+| selection      | `oklch(0.84 0.17 85)`    |
+| selection-soft | `oklch(0.977 0.025 85)`  |
+| success        | `oklch(0.53 0.13 150)`   |
+| earth          | `oklch(0.69 0.04 85)`    |
 
-`control-*` tokens alias these roles. Do not reintroduce a separate stone or slate
-palette for speed controls or voice dropdowns.
-
-## Voice category cues
-
-Female roles use hue 15; male roles use hue 235. Label lightness is 0.94 with
-chroma 0.025. Selected surfaces use lightness 0.98 and chroma 0.008.
-Female text uses `0.38 0.10 15`, male text `0.38 0.075 235`.
-Selected borders use lightness 0.72, with respective chroma 0.09 and 0.075.
-
-Keep the selected border, lightly tinted background and explicit `Selected` text.
-Do not use gender symbols. Preserve native dropdowns and readable option names.
+Both voice groups share purple labels and near-black text. Keep explicit
+Female/Male names, Selected text and native dropdowns.
 
 ## Typography and spacing
 
@@ -79,12 +67,10 @@ Do not use gender symbols. Preserve native dropdowns and readable option names.
 ## Surfaces and elevation
 
 - Main panel radius: 24 px. Section role: 16 px. Control/history radius: 12 px.
-- Main panel has no additional border utility: its shadow includes a 0.5 px
-  outline at 12% opacity, a 2 px / 4 px shadow at 4%, and a 6 px / 16 px shadow
-  at 4%. All use the warm strong neutral.
-- Drawer uses the same thin shadow outline plus an 8 px / 32 px shadow at 8%.
-- The form section has no enclosing card. Speed controls use a subtle background
-  without a separate border. Individual inputs retain usable outlines.
+- Main panel and speed region use 1 px solid outlines. Inputs retain stronger
+  thin outlines. The form section has no enclosing card.
+- Shadows: panel 2 px / 6 px at 2.5%; Drawer 4 px / 16 px at 6%; circular close
+  control 1 px / 2 px at 4%.
 
 ## Reading flow and guidance
 
@@ -107,15 +93,16 @@ full-flow explanation below the title.
   generating, and `Square` with `Stop playback` while playing. Place the 20 px
   icon before the text with an 8 px gap. Icons are decorative (`aria-hidden`);
   visible text supplies the accessible button name.
-- Primary play button: ink background, surface text, lighter hover. Disabled
+- Primary play button: ink background, surface text, lighter hover. Playing uses
+  success green with a darker hover. Disabled
   state uses the control border background and secondary text.
 - Shared quiet/icon buttons: hover background and visible keyboard focus.
 - Recent readings trigger: full capsule outline and minimum 44 px height.
 - History cards: surface background and faint border by default; hover darkens
-  background and border; selected uses the active border and hover background.
+  background and border; selected uses the active border and selection-soft background.
   Pressed uses soft background. Do not fade the whole card or its French text.
 - Drawer close uses the shared `icon-circle` button: a full circular outline,
-  surface background and a subtle 1 px / 3 px shadow at 8%. History delete
+  surface background and a subtle 1 px / 2 px shadow at 4%. History delete
   buttons remain plain icons, vertically centered in their respective cards.
 - Delete controls are separate sibling buttons with 44 px targets. Preserve
   accessible labels and `aria-pressed` on the history selection button.

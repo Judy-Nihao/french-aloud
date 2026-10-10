@@ -76,7 +76,8 @@ Their values live in `app/globals.css`, rather than in each consumer.
        +--> future surface changes happen at the token source
 ```
 
-Tokens use OKLCH warm neutrals with restrained rose / sky category cues.
+Tokens use OKLCH neutrals with purple voice labels, yellow selection cues,
+green playing feedback and earth-toned speed badges.
 `control-*` roles alias the base palette using `@theme inline`. Change values at
 the token source rather than scattering literal colors through JSX.
 
@@ -85,8 +86,9 @@ Token groups:
 - Base roles: `canvas`, `surface`, `hover`, `soft`, `ink`, `strong`, `body`,
   `secondary`, `muted`, `placeholder`, borders, focus and primary hover.
 - `control-*`: voice controls, speed panel and status feedback. These alias the
-  shared warm-neutral base roles.
-- `female-*` / `male-*`: category label, selected surface, outline and text.
+  shared cool-neutral base roles.
+- `female-*` / `male-*`: category label, selected surface, outline and text. Both groups
+  currently share the same brand palette.
   Preserve explicit selected text as well as color cues.
 - `font-sans`: `system-ui, sans-serif`. Do not introduce a downloadable font as part
   of an unrelated refactor.

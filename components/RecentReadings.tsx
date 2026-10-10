@@ -89,7 +89,7 @@ export function RecentReadings({
                           type="button"
                           aria-pressed={selected}
                           onClick={() => onRestore(reading.text)}
-                          className={`w-full cursor-pointer rounded-control border p-4 pr-14 text-left transition-[border-color,background-color] duration-150 focus-visible:ring-2 focus-visible:ring-focus focus-visible:outline-none active:bg-soft motion-reduce:transition-none ${selected ? "border-border-active bg-hover" : "border-border/50 bg-surface hover:border-border-control hover:bg-hover"}`}
+                          className={`w-full cursor-pointer rounded-control border p-4 pr-14 text-left transition-[border-color,background-color] duration-150 focus-visible:ring-2 focus-visible:ring-focus focus-visible:outline-none active:bg-soft motion-reduce:transition-none ${selected ? "border-border-active bg-selection-soft" : "border-border bg-surface hover:border-border-control hover:bg-hover"}`}
                         >
                           <span
                             lang="fr"
