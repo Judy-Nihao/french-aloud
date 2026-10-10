@@ -114,6 +114,9 @@ full-flow explanation below the title.
 - History cards: surface background and faint border by default; hover darkens
   background and border; selected uses the active border and hover background.
   Pressed uses soft background. Do not fade the whole card or its French text.
+- Drawer close uses the shared `icon-circle` button: a full circular outline,
+  surface background and a subtle 1 px / 3 px shadow at 8%. History delete
+  buttons remain plain icons, vertically centered in their respective cards.
 - Delete controls are separate sibling buttons with 44 px targets. Preserve
   accessible labels and `aria-pressed` on the history selection button.
 - Drawer remains right-sided on desktop and bottom-sided on mobile. Keep the

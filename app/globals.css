@@ -40,6 +40,7 @@
   --color-male-border: oklch(0.72 0.075 235);
   --color-male-surface: oklch(0.98 0.008 235);
   --color-male-selected: var(--color-male-ink);
+  --shadow-control: 0 1px 3px oklch(0.25 0.006 75 / 0.08);
   --shadow-panel:
     0 0 0 0.5px oklch(0.25 0.006 75 / 0.12),
     0 2px 4px oklch(0.25 0.006 75 / 0.04),

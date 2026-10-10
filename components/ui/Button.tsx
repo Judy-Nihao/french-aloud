@@ -1,13 +1,15 @@
 import type { ComponentProps } from "react";
 
 type ButtonProps = ComponentProps<"button"> & {
-  variant?: "quiet" | "icon" | "pill";
+  variant?: "quiet" | "icon" | "icon-circle" | "pill";
 };
 
 const variants = {
   quiet:
     "min-h-11 transition-colors rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:bg-hover disabled:opacity-40",
   icon: "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-hover hover:text-strong",
+  "icon-circle":
+    "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-control bg-surface text-secondary shadow-control transition-colors hover:border-border-active hover:bg-hover hover:text-strong",
   pill: "inline-flex min-h-11 items-center justify-center rounded-full border border-border-control bg-surface px-4 py-2 text-sm font-medium whitespace-nowrap text-secondary transition-colors hover:border-border-active hover:bg-hover hover:text-strong focus-visible:ring-offset-2",
 };
 

@@ -58,7 +58,7 @@ export function RecentReadings({
                     Recent readings
                   </Drawer.Title>
                   <Drawer.Close
-                    render={<Button variant="icon" />}
+                    render={<Button variant="icon-circle" className="mr-1" />}
                     aria-label="Close recent readings"
                   >
                     <X className="h-4 w-4" aria-hidden="true" />
@@ -100,7 +100,7 @@ export function RecentReadings({
                         </button>
                         <Button
                           variant="icon"
-                          className="absolute top-1 right-1"
+                          className="absolute top-1/2 right-1 -translate-y-1/2"
                           aria-label={`Delete reading: ${reading.text}`}
                           onClick={() => onRemove(reading.text)}
                         >

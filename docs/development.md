@@ -125,7 +125,8 @@ its CSS variables rather than rewriting the library's positioning system.
 `components/ui/Button.tsx` owns repeated button interactions:
 
 - `quiet`: text actions such as Copy.
-- `icon`: close and per-reading delete, with a consistent 44 px target.
+- `icon`: per-reading delete, with a consistent 44 px target.
+- `icon-circle`: Drawer close, with a circular outline and subtle shared shadow.
 - `pill`: Recent readings, with its visible capsule outline.
 
 Use these variants through the shared Button. Feature components still own their
