@@ -172,9 +172,6 @@ export const FrenchReader = () => {
             />
           </div>
         </div>
-        <p className="mt-3 max-w-prose text-base leading-7 text-body">
-          Type a French phrase, choose a voice, and hear it read aloud.
-        </p>
       </header>
       <section className="mt-9 sm:mt-10">
         <div className="grid gap-3">
@@ -190,6 +187,7 @@ export const FrenchReader = () => {
           <textarea
             id="french-text"
             className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border-control bg-surface px-4 py-4 text-lg leading-8 text-ink outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft"
+            placeholder="Type or paste French text…"
             rows={4}
             value={text}
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -199,6 +197,22 @@ export const FrenchReader = () => {
             }}
           />
         </div>
+
+        <PlayAudioButton
+          key={`${selectedVoiceId}:${text}`}
+          text={text}
+          voiceId={selectedVoice?.id ?? null}
+          voiceName={selectedVoice?.name ?? null}
+          speed={speed}
+          disabled={voiceListStatus !== "ready"}
+          onStatusChange={(state, message) => {
+            setStatusMessage(state === "success" ? "" : message);
+          }}
+          onCacheStatusChange={setCacheStatus}
+          onPlaybackStart={(playedText) =>
+            saveReadings(addReading(readingsRef.current, playedText))
+          }
+        />
 
         <div className="mt-8">
           {voiceListStatus === "loading" ? <VoiceListSkeleton /> : null}
@@ -301,22 +315,6 @@ export const FrenchReader = () => {
             </>
           ) : null}
         </div>
-
-        <PlayAudioButton
-          key={`${selectedVoiceId}:${text}`}
-          text={text}
-          voiceId={selectedVoice?.id ?? null}
-          voiceName={selectedVoice?.name ?? null}
-          speed={speed}
-          disabled={voiceListStatus !== "ready"}
-          onStatusChange={(state, message) => {
-            setStatusMessage(state === "success" ? "" : message);
-          }}
-          onCacheStatusChange={setCacheStatus}
-          onPlaybackStart={(playedText) =>
-            saveReadings(addReading(readingsRef.current, playedText))
-          }
-        />
 
         <SpeechSpeedControl value={speed} onChange={setSpeed} />
 
