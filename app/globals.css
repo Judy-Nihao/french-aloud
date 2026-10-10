@@ -3,48 +3,53 @@
 /* Shared visual values. Keep component layout in Tailwind className. */
 @theme inline {
   --font-sans: system-ui, sans-serif;
-  --color-canvas: var(--color-slate-50);
-  --color-surface: var(--color-white);
-  --color-hover: var(--color-slate-100);
-  --color-soft: var(--color-slate-200);
-  --color-border: var(--color-slate-200);
-  --color-border-control: var(--color-slate-300);
-  --color-border-active: var(--color-slate-400);
-  --color-focus: var(--color-slate-400);
-  --color-placeholder: var(--color-slate-400);
-  --color-muted: var(--color-slate-500);
-  --color-secondary: var(--color-slate-600);
-  --color-body: var(--color-slate-700);
-  --color-strong: var(--color-slate-900);
-  --color-ink: var(--color-slate-950);
-  --color-primary-hover: var(--color-slate-800);
-  --color-control-surface: var(--color-stone-50);
-  --color-control-hover: var(--color-stone-100);
-  --color-control-soft: var(--color-stone-200);
-  --color-control-border: var(--color-stone-200);
-  --color-control-outline: var(--color-stone-300);
-  --color-control-focus: var(--color-stone-500);
-  --color-control-muted: var(--color-stone-500);
-  --color-control-secondary: var(--color-stone-600);
-  --color-control-body: var(--color-stone-700);
-  --color-control-strong: var(--color-stone-800);
-  --color-control-ink: var(--color-stone-900);
-  --color-control-dot: var(--color-stone-400);
-  --color-female-label: var(--color-rose-100);
-  --color-female-ink: var(--color-rose-900);
-  --color-female-border: var(--color-rose-300);
-  --color-female-surface: var(--color-rose-50);
-  --color-female-selected: var(--color-rose-800);
-  --color-male-label: var(--color-sky-100);
-  --color-male-ink: var(--color-sky-900);
-  --color-male-border: var(--color-sky-300);
-  --color-male-surface: var(--color-sky-50);
-  --color-male-selected: var(--color-sky-800);
-  --shadow-panel: var(--shadow-lg);
-  --shadow-drawer: var(--shadow-xl);
-  --radius-panel: var(--radius-3xl);
-  --radius-section: var(--radius-2xl);
-  --radius-control: var(--radius-xl);
+  --color-canvas: oklch(0.931 0.006 75);
+  --color-surface: oklch(0.991 0.002 75);
+  --color-hover: oklch(0.965 0.004 75);
+  --color-soft: oklch(0.915 0.008 75);
+  --color-border: oklch(0.88 0.009 75);
+  --color-border-control: oklch(0.8 0.012 75);
+  --color-border-active: oklch(0.6 0.015 75);
+  --color-focus: oklch(0.48 0.012 75);
+  --color-placeholder: oklch(0.5 0.012 75);
+  --color-muted: oklch(0.5 0.012 75);
+  --color-secondary: oklch(0.48 0.012 75);
+  --color-body: oklch(0.43 0.012 75);
+  --color-strong: oklch(0.25 0.006 75);
+  --color-ink: oklch(0.2 0.006 75);
+  --color-primary-hover: oklch(0.3 0.008 75);
+  --color-control-surface: var(--color-hover);
+  --color-control-hover: var(--color-canvas);
+  --color-control-soft: var(--color-soft);
+  --color-control-border: var(--color-border);
+  --color-control-outline: var(--color-border-control);
+  --color-control-focus: var(--color-focus);
+  --color-control-muted: var(--color-muted);
+  --color-control-secondary: var(--color-secondary);
+  --color-control-body: var(--color-body);
+  --color-control-strong: var(--color-strong);
+  --color-control-ink: var(--color-ink);
+  --color-control-dot: var(--color-muted);
+  --color-female-label: oklch(0.94 0.025 15);
+  --color-female-ink: oklch(0.38 0.1 15);
+  --color-female-border: oklch(0.72 0.09 15);
+  --color-female-surface: oklch(0.98 0.008 15);
+  --color-female-selected: var(--color-female-ink);
+  --color-male-label: oklch(0.94 0.025 235);
+  --color-male-ink: oklch(0.38 0.075 235);
+  --color-male-border: oklch(0.72 0.075 235);
+  --color-male-surface: oklch(0.98 0.008 235);
+  --color-male-selected: var(--color-male-ink);
+  --shadow-panel:
+    0 0 0 0.5px oklch(0.25 0.006 75 / 0.12),
+    0 2px 4px oklch(0.25 0.006 75 / 0.04),
+    0 6px 16px oklch(0.25 0.006 75 / 0.04);
+  --shadow-drawer:
+    0 0 0 0.5px oklch(0.25 0.006 75 / 0.12),
+    0 8px 32px oklch(0.25 0.006 75 / 0.08);
+  --radius-panel: 1.5rem;
+  --radius-section: 1rem;
+  --radius-control: 0.75rem;
 }
 
 :root {
