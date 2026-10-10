@@ -6,12 +6,12 @@ type ButtonProps = ComponentProps<"button"> & {
 
 const variants = {
   quiet:
-    "min-h-11 transition-colors rounded-lg px-3 py-2 text-sm font-medium text-secondary hover:bg-hover disabled:opacity-40",
+    "min-h-11 transition-colors rounded-lg px-3 py-2 md:text-sm font-medium text-secondary hover:bg-hover disabled:opacity-40",
   icon: "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-hover hover:text-strong",
   "icon-circle":
     "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-control bg-surface text-secondary shadow-control transition-colors hover:border-border-active hover:bg-hover hover:text-strong",
-  tab: "group relative inline-flex min-h-11 items-center justify-center px-10 py-2 text-sm font-medium whitespace-nowrap text-ink focus-visible:ring-offset-2",
-  pill: "inline-flex min-h-11 items-center justify-center rounded-full border border-border-control bg-surface px-4 py-2 text-sm font-medium whitespace-nowrap text-secondary transition-colors hover:border-border-active hover:bg-hover hover:text-strong focus-visible:ring-offset-2",
+  tab: "group relative inline-flex min-h-11 items-center justify-center py-2 pr-5 pl-10 md:text-sm font-medium whitespace-nowrap text-ink focus-visible:ring-offset-2",
+  pill: "inline-flex min-h-11 items-center justify-center rounded-full border border-border-control bg-surface px-4 py-2 md:text-sm font-medium whitespace-nowrap text-secondary transition-colors hover:border-border-active hover:bg-hover hover:text-strong focus-visible:ring-offset-2",
 };
 
 /** Layout belongs to the caller; shared interaction styles belong here. */
@@ -42,11 +42,11 @@ export function Button({
             aria-hidden="true"
           >
             <path
-              d="M0 44 C38 44 26 0 52 0 H208 C234 0 222 44 260 44 Z"
+              d="M0 44 C38 44 26 0 52 0 H236 Q260 0 260 24 V44 Z"
               className="fill-tab transition-opacity group-hover:opacity-80 motion-reduce:transition-none"
             />
             <path
-              d="M0 44 C38 44 26 0 52 0 H208 C234 0 222 44 260 44"
+              d="M0 44 C38 44 26 0 52 0 H236 Q260 0 260 24 V44"
               className="fill-none stroke-border"
               strokeWidth="1"
               vectorEffect="non-scaling-stroke"

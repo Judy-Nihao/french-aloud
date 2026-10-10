@@ -14,17 +14,17 @@ export const SpeechSpeedControl = ({
   onChange,
 }: SpeechSpeedControlProps) => {
   return (
-    <fieldset className="mt-8 rounded-control border border-control-border bg-control-surface px-4 py-4 sm:px-5">
+    <fieldset className="mt-8 rounded-control border border-control-border bg-control-surface px-4 py-4 md:px-5">
       <legend className="sr-only">Playback speed</legend>
       <div className="flex items-center justify-between gap-4">
         <label
-          className="text-sm font-medium text-control-strong"
+          className="font-medium text-control-strong md:text-sm"
           htmlFor="playback-speed"
         >
           Playback speed
         </label>
         <output
-          className="min-w-14 rounded-md bg-control-soft px-2 py-1 text-center text-sm font-medium text-ink tabular-nums"
+          className="min-w-14 rounded-md bg-control-soft px-2 py-1 text-center font-medium text-ink tabular-nums md:text-sm"
           htmlFor="playback-speed"
         >
           {formatSpeed(value)}
@@ -45,7 +45,7 @@ export const SpeechSpeedControl = ({
       />
 
       <div
-        className="relative mt-1 h-4 text-xs text-control-muted"
+        className="relative mt-1 h-4 text-control-muted md:text-xs"
         aria-hidden="true"
       >
         <span className="absolute left-0">0.7×</span>

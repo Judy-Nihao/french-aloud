@@ -148,11 +148,11 @@ export const FrenchReader = () => {
   return (
     <>
       <header>
-        <div className="pt-5 sm:pt-3">
-          <h1 className="text-center font-heading text-4xl leading-tight font-semibold text-ink sm:text-6xl">
+        <div className="pt-5 md:pt-3">
+          <h1 className="text-center font-heading text-5xl leading-tight font-semibold text-ink md:text-6xl">
             French Aloud
           </h1>
-          <div className="absolute -top-11 right-6 -translate-y-[0.5px] sm:right-8">
+          <div className="absolute -top-11 right-[-0.5px] translate-y-[-0.5px]">
             <RecentReadings
               readings={readings}
               storageError={storageError}
@@ -173,11 +173,11 @@ export const FrenchReader = () => {
           </div>
         </div>
       </header>
-      <section className="mt-9 sm:mt-10">
+      <section className="mt-9 md:mt-10">
         <div className="grid gap-3">
           <div className="flex items-center justify-between gap-3">
             <label
-              className="text-sm font-medium text-body"
+              className="font-medium text-body md:text-sm"
               htmlFor="french-text"
             >
               French text
@@ -186,7 +186,7 @@ export const FrenchReader = () => {
           </div>
           <textarea
             id="french-text"
-            className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border-control bg-surface px-4 py-4 text-lg leading-8 text-ink outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft"
+            className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border-control bg-surface px-4 py-4 leading-8 text-ink outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft md:text-lg"
             placeholder="Type or paste French text…"
             rows={4}
             value={text}
@@ -222,10 +222,10 @@ export const FrenchReader = () => {
               className="rounded-lg border border-control-outline bg-control-surface px-4 py-4"
               role="alert"
             >
-              <p className="text-sm text-control-body">{voiceListError}</p>
+              <p className="text-control-body md:text-sm">{voiceListError}</p>
               <button
                 type="button"
-                className="mt-3 inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-control-outline bg-control-hover px-3 py-2 text-sm font-medium text-control-strong hover:bg-control-soft focus-visible:ring-2 focus-visible:ring-control-focus focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="mt-3 inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-control-outline bg-control-hover px-3 py-2 font-medium text-control-strong hover:bg-control-soft focus-visible:ring-2 focus-visible:ring-control-focus focus-visible:ring-offset-2 focus-visible:outline-none md:text-sm"
                 onClick={() => {
                   setVoiceListStatus("loading");
                   setLoadAttempt((attempt) => attempt + 1);
@@ -239,7 +239,7 @@ export const FrenchReader = () => {
 
           {voiceListStatus === "ready" ? (
             <>
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid gap-5 md:grid-cols-2">
                 {voiceGroups.map((group) => {
                   const groupVoices = voices.filter(
                     (voice) => voice.gender === group.gender,
@@ -264,7 +264,7 @@ export const FrenchReader = () => {
                     >
                       <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
                         <label
-                          className={`inline-flex min-h-8 items-center rounded-md px-3 py-1.5 text-sm font-medium ${group.labelClassName}`}
+                          className={`inline-flex min-h-8 items-center rounded-md px-3 py-1.5 font-medium md:text-sm ${group.labelClassName}`}
                           htmlFor={selectId}
                         >
                           {group.label}
@@ -272,7 +272,7 @@ export const FrenchReader = () => {
 
                         {isSelected ? (
                           <span
-                            className={`text-xs font-semibold ${group.selectedLabelClassName}`}
+                            className={`font-semibold md:text-xs ${group.selectedLabelClassName}`}
                           >
                             Selected
                           </span>
@@ -282,7 +282,7 @@ export const FrenchReader = () => {
                       <div className="relative">
                         <select
                           id={selectId}
-                          className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-control-surface px-4 py-3 pr-11 text-sm font-medium text-control-ink transition-colors duration-150 outline-none hover:bg-control-hover focus:border-control-focus focus:ring-2 focus:ring-control-soft ${
+                          className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-control-surface px-4 py-3 pr-11 font-medium text-control-ink transition-colors duration-150 outline-none hover:bg-control-hover focus:border-control-focus focus:ring-2 focus:ring-control-soft md:text-sm ${
                             isSelected
                               ? "border-control-focus"
                               : "border-control-outline"
@@ -320,7 +320,7 @@ export const FrenchReader = () => {
 
         <div aria-live="polite">
           {cacheStatus ? (
-            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-control-border bg-control-surface px-2.5 py-1 text-xs font-medium text-control-muted">
+            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-control-border bg-control-surface px-2.5 py-1 font-medium text-control-muted md:text-xs">
               <span
                 className="h-1.5 w-1.5 rounded-full bg-control-dot"
                 aria-hidden="true"
@@ -333,7 +333,7 @@ export const FrenchReader = () => {
 
         <div aria-live="polite">
           {statusMessage ? (
-            <p className="mt-3 rounded-lg bg-control-hover px-3 py-2.5 text-sm text-control-secondary">
+            <p className="mt-3 rounded-lg bg-control-hover px-3 py-2.5 text-control-secondary md:text-sm">
               {statusMessage}
             </p>
           ) : null}
@@ -345,7 +345,7 @@ export const FrenchReader = () => {
 
 const VoiceListSkeleton = () => (
   <div
-    className="grid gap-5 sm:grid-cols-2"
+    className="grid gap-5 md:grid-cols-2"
     aria-label="Loading voices"
     role="status"
   >

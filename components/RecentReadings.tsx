@@ -22,7 +22,7 @@ export function RecentReadings({
   const [open, setOpen] = useState(false);
   const [desktop, setDesktop] = useState(false);
   useEffect(() => {
-    const query = window.matchMedia("(min-width: 640px)");
+    const query = window.matchMedia("(min-width: 768px)");
     const update = () => setDesktop(query.matches);
     update();
     query.addEventListener("change", update);
@@ -54,7 +54,7 @@ export function RecentReadings({
               )}
               <div className="px-6 pt-5 pb-4">
                 <div className="flex items-center justify-between gap-3">
-                  <Drawer.Title className="text-xl font-medium">
+                  <Drawer.Title className="font-medium md:text-xl">
                     Recent readings
                   </Drawer.Title>
                   <Drawer.Close
@@ -64,11 +64,11 @@ export function RecentReadings({
                     <X className="h-4 w-4" aria-hidden="true" />
                   </Drawer.Close>
                 </div>
-                <Drawer.Description className="mt-2 text-sm text-secondary">
+                <Drawer.Description className="mt-2 text-secondary md:text-sm">
                   Your last 10 texts, saved in this browser.
                 </Drawer.Description>
                 {storageError && (
-                  <p role="status" className="mt-2 text-sm text-secondary">
+                  <p role="status" className="mt-2 text-secondary md:text-sm">
                     Browser storage is unavailable. History lasts for this visit
                     only.
                   </p>
@@ -76,7 +76,7 @@ export function RecentReadings({
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6">
                 {!readings.length && (
-                  <p className="py-8 text-sm text-secondary">
+                  <p className="py-8 text-secondary md:text-sm">
                     Texts appear here when playback starts.
                   </p>
                 )}
@@ -93,7 +93,7 @@ export function RecentReadings({
                         >
                           <span
                             lang="fr"
-                            className="block text-base leading-7 break-words whitespace-pre-wrap"
+                            className="block leading-7 break-words whitespace-pre-wrap md:text-base"
                           >
                             {reading.text}
                           </span>

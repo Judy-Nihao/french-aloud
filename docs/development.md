@@ -235,3 +235,19 @@ ship to a fresh clone. The README link is therefore the committed entry point.
 `docs/design/` is ignored and contains personal reference reports. Do not rely on
 those private reports as the only source for required development rules. Do not
 commit personal design references or browser artifacts.
+
+## Responsive convention
+
+Use the mobile layout as the unprefixed default. For text sizes, inherit the
+base browser/Tailwind size when appropriate. If mobile needs a specific size,
+set an unprefixed utility, then override at md (768 px) and lg (1024 px).
+The brand heading uses text-5xl md:text-6xl. Base color, weight,
+line-height, spacing and interaction utilities remain unprefixed where needed.
+Use md as the first layout expansion: voice columns, wider padding and right-side
+Drawer all begin at 768 px. Keep JavaScript media queries aligned with Tailwind.
+
+```text
+base: mobile defaults, explicit font size where needed
+  -> md: tablet layout and explicit type scale
+  -> lg: larger desktop heading
+```

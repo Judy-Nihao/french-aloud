@@ -58,15 +58,16 @@ and control-soft (0.925) backgrounds rather than an earth-colored badge.
 - UI family: `system-ui, sans-serif`. Brand title: self-hosted Baskervville SemiBold
   via next/font/google, with Georgia fallback. Next.js downloads fonts at build
   time and serves them from the application; browsers do not contact Google.
-- Main title: centered, 36 px mobile and 60 px from the small breakpoint, 600
-  weight and natural letter spacing. Drawer title: 20 px, medium weight.
-- French editor: 18 px, 32 px line height. History French: 16 px, 28 px line height.
-- Supporting text: 14–16 px. Keep French letter spacing normal.
-- Main shell: max width 48 rem; padding 20 px mobile and 40 px from the small
+- Main title: centered, 48 px mobile and 60 px at md and above, 600
+  weight and natural letter spacing. Drawer title: inherited mobile size, 20 px at md, medium weight.
+- French editor: inherited mobile size, 18 px at md, 32 px line height. History
+  French: inherited mobile size, 16 px at md, 28 px line height.
+- Supporting text: inherited mobile size, 14–16 px at md. Keep French letter spacing normal.
+- Main shell: max width 48 rem; padding 20 px mobile and 40 px from the md
   breakpoint. Header-to-editor section gap: 36 px mobile and 40 px desktop.
-- Recent readings is a purple tab attached above the panel near its right edge.
+- Recent readings is a neutral-gray tab attached above the panel flush with its right edge.
   Page top padding reserves its height. Voice groups become two columns at the
-  small breakpoint.
+  md breakpoint.
 - The editor grows with content using `field-sizing-content`; keep scroll/manual
   resize fallback. Preserve comfortable spacing between editor, voices and play.
 
@@ -103,7 +104,7 @@ full-flow explanation below the title.
   success green with a darker hover. Disabled
   state uses the control border background and secondary text.
 - Shared quiet/icon buttons: hover background and visible keyboard focus.
-- Recent readings trigger: neutral-gray tab with a curved left and right shoulders that joins the panel top edge. A decorative SVG supplies the
+- Recent readings trigger: neutral-gray tab with a curved left shoulder that joins the panel top edge. A decorative SVG supplies the
   silhouette and fine outline without a bottom border. Keep a 44 px minimum
   height and leave panel overflow visible.
 - History cards: surface background and faint border by default; hover darkens
@@ -126,3 +127,7 @@ the reference website's very low-contrast navigation text.
 
 Use lint, TypeScript, existing behavior tests and a production build for shared
 CSS changes. Browser viewport emulation is not physical iPhone testing.
+
+The history tab is flush with the panel right edge. Its left shoulder curves
+into the top border; the rounded upper-right corner continues vertically into
+the panel right border. The panel upper-right corner is square at this join.
