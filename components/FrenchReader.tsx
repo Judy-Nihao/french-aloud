@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
-import { ChevronDown, RotateCcw } from "lucide-react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { ChevronDown } from "lucide-react";
 import { PlayAudioButton } from "@/components/PlayAudioButton";
 import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
 import { CopyTextButton } from "@/components/CopyTextButton";
@@ -13,23 +13,7 @@ import {
   type Reading,
 } from "@/lib/reading-history";
 
-type VoiceGender = "female" | "male";
-
-type PublicVoice = {
-  id: string;
-  name: string;
-  gender: VoiceGender;
-  category: string | null;
-  description: string | null;
-  labels: Record<string, string>;
-  previewUrl: string | null;
-  isDefault: boolean;
-};
-
-type VoiceListResponse = {
-  voices?: PublicVoice[];
-  error?: string;
-};
+import { voices, defaultVoiceId, type VoiceGender } from "@/lib/voices";
 
 const voiceGroups: Array<{
   gender: VoiceGender;
@@ -61,13 +45,7 @@ export const FrenchReader = () => {
   const [text, setText] = useState(
     "J’apprends le français parce que j’aime trop comment ça sonne.",
   );
-  const [voices, setVoices] = useState<PublicVoice[]>([]);
-  const [selectedVoiceId, setSelectedVoiceId] = useState<string | null>(null);
-  const [voiceListStatus, setVoiceListStatus] = useState<
-    "loading" | "ready" | "error"
-  >("loading");
-  const [voiceListError, setVoiceListError] = useState("");
-  const [loadAttempt, setLoadAttempt] = useState(0);
+  const [selectedVoiceId, setSelectedVoiceId] = useState(defaultVoiceId);
   const [statusMessage, setStatusMessage] = useState("");
   const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
   const [speed, setSpeed] = useState(1);
@@ -99,51 +77,8 @@ export const FrenchReader = () => {
     }
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const loadVoices = async () => {
-      try {
-        const response = await fetch("/api/voices", {
-          signal: controller.signal,
-        });
-        const data = (await response.json()) as VoiceListResponse;
-
-        if (!response.ok) {
-          throw new Error(data.error ?? "Unable to load voices.");
-        }
-
-        const availableVoices = data.voices ?? [];
-
-        if (availableVoices.length === 0) {
-          throw new Error("No voices are available right now.");
-        }
-
-        setVoices(availableVoices);
-        setSelectedVoiceId(
-          availableVoices.find((voice) => voice.isDefault)?.id ??
-            availableVoices[0].id,
-        );
-        setVoiceListStatus("ready");
-        setVoiceListError("");
-      } catch (error) {
-        if (controller.signal.aborted) return;
-        setVoiceListStatus("error");
-        setVoiceListError(
-          error instanceof Error ? error.message : "Unable to load voices.",
-        );
-      }
-    };
-
-    void loadVoices();
-
-    return () => controller.abort();
-  }, [loadAttempt]);
-
-  const selectedVoice = useMemo(
-    () => voices.find((voice) => voice.id === selectedVoiceId) ?? null,
-    [selectedVoiceId, voices],
-  );
+  const selectedVoice =
+    voices.find((voice) => voice.id === selectedVoiceId) ?? null;
 
   return (
     <>
@@ -204,7 +139,6 @@ export const FrenchReader = () => {
           voiceId={selectedVoice?.id ?? null}
           voiceName={selectedVoice?.name ?? null}
           speed={speed}
-          disabled={voiceListStatus !== "ready"}
           onStatusChange={(state, message) => {
             setStatusMessage(state === "error" ? message : "");
           }}
@@ -215,105 +149,77 @@ export const FrenchReader = () => {
         />
 
         <div className="mt-8">
-          {voiceListStatus === "loading" ? <VoiceListSkeleton /> : null}
+          <div className="grid gap-5 md:grid-cols-2">
+            {voiceGroups.map((group) => {
+              const groupVoices = voices.filter(
+                (voice) => voice.gender === group.gender,
+              );
+              const selectId = `${group.gender}-voice`;
+              const selectedGroupVoice = groupVoices.some(
+                (voice) => voice.id === selectedVoiceId,
+              )
+                ? selectedVoiceId
+                : "";
+              const isSelected = Boolean(selectedGroupVoice);
 
-          {voiceListStatus === "error" ? (
-            <div
-              className="rounded-lg border border-control-outline bg-control-surface px-4 py-4"
-              role="alert"
-            >
-              <p className="text-control-body md:text-sm">{voiceListError}</p>
-              <button
-                type="button"
-                className="mt-3 inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-control-outline bg-control-hover px-3 py-2 font-medium text-control-strong hover:bg-control-soft focus-visible:ring-2 focus-visible:ring-control-focus focus-visible:ring-offset-2 focus-visible:outline-none md:text-sm"
-                onClick={() => {
-                  setVoiceListStatus("loading");
-                  setLoadAttempt((attempt) => attempt + 1);
-                }}
-              >
-                <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                Try again
-              </button>
-            </div>
-          ) : null}
-
-          {voiceListStatus === "ready" ? (
-            <>
-              <div className="grid gap-5 md:grid-cols-2">
-                {voiceGroups.map((group) => {
-                  const groupVoices = voices.filter(
-                    (voice) => voice.gender === group.gender,
-                  );
-                  const selectId = `${group.gender}-voice`;
-                  const selectedGroupVoice = groupVoices.some(
-                    (voice) => voice.id === selectedVoiceId,
-                  )
-                    ? selectedVoiceId
-                    : "";
-                  const isSelected = Boolean(selectedGroupVoice);
-
-                  return (
-                    <div
-                      key={group.gender}
-                      className={`rounded-control border p-3 transition-colors duration-200 motion-reduce:transition-none ${
-                        isSelected
-                          ? group.selectedClassName
-                          : "border-transparent"
-                      }`}
-                      aria-current={isSelected ? "true" : undefined}
+              return (
+                <div
+                  key={group.gender}
+                  className={`rounded-control border p-3 transition-colors duration-200 motion-reduce:transition-none ${
+                    isSelected ? group.selectedClassName : "border-transparent"
+                  }`}
+                  aria-current={isSelected ? "true" : undefined}
+                >
+                  <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
+                    <label
+                      className={`inline-flex min-h-8 items-center rounded-md px-3 py-1.5 font-medium md:text-sm ${group.labelClassName}`}
+                      htmlFor={selectId}
                     >
-                      <div className="mb-2 flex min-h-8 items-center justify-between gap-3">
-                        <label
-                          className={`inline-flex min-h-8 items-center rounded-md px-3 py-1.5 font-medium md:text-sm ${group.labelClassName}`}
-                          htmlFor={selectId}
-                        >
-                          {group.label}
-                        </label>
+                      {group.label}
+                    </label>
 
-                        {isSelected ? (
-                          <span
-                            className={`font-semibold md:text-xs ${group.selectedLabelClassName}`}
-                          >
-                            Selected
-                          </span>
-                        ) : null}
-                      </div>
+                    {isSelected ? (
+                      <span
+                        className={`font-semibold md:text-xs ${group.selectedLabelClassName}`}
+                      >
+                        Selected
+                      </span>
+                    ) : null}
+                  </div>
 
-                      <div className="relative">
-                        <select
-                          id={selectId}
-                          className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-control-surface px-4 py-3 pr-11 font-medium text-control-ink transition-colors duration-150 outline-none hover:bg-control-hover focus:border-control-focus focus:ring-2 focus:ring-control-soft md:text-sm ${
-                            isSelected
-                              ? "border-control-focus"
-                              : "border-control-outline"
-                          }`}
-                          value={selectedGroupVoice ?? ""}
-                          onChange={(event) => {
-                            setSelectedVoiceId(event.target.value);
-                            setStatusMessage("");
-                            setCacheStatus(null);
-                          }}
-                        >
-                          <option value="" disabled>
-                            {group.placeholder}
-                          </option>
-                          {groupVoices.map((voice) => (
-                            <option key={voice.id} value={voice.id}>
-                              {voice.name}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown
-                          className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-control-muted"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          ) : null}
+                  <div className="relative">
+                    <select
+                      id={selectId}
+                      className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-control-surface px-4 py-3 pr-11 font-medium text-control-ink transition-colors duration-150 outline-none hover:bg-control-hover focus:border-control-focus focus:ring-2 focus:ring-control-soft md:text-sm ${
+                        isSelected
+                          ? "border-control-focus"
+                          : "border-control-outline"
+                      }`}
+                      value={selectedGroupVoice ?? ""}
+                      onChange={(event) => {
+                        setSelectedVoiceId(event.target.value);
+                        setStatusMessage("");
+                        setCacheStatus(null);
+                      }}
+                    >
+                      <option value="" disabled>
+                        {group.placeholder}
+                      </option>
+                      {groupVoices.map((voice) => (
+                        <option key={voice.id} value={voice.id}>
+                          {voice.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-control-muted"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <SpeechSpeedControl value={speed} onChange={setSpeed} />
@@ -342,18 +248,3 @@ export const FrenchReader = () => {
     </>
   );
 };
-
-const VoiceListSkeleton = () => (
-  <div
-    className="grid gap-5 md:grid-cols-2"
-    aria-label="Loading voices"
-    role="status"
-  >
-    {voiceGroups.map((group) => (
-      <div key={group.gender} className="motion-safe:animate-pulse">
-        <div className="mb-2 h-8 w-32 rounded-md bg-control-soft" />
-        <div className="h-12 w-full rounded-lg border border-control-border bg-control-soft" />
-      </div>
-    ))}
-  </div>
-);
