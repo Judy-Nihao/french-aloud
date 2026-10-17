@@ -34,7 +34,7 @@ export function Button({
         <>
           {/* Cover the panel border beneath the tab; its stroke shares the border centerline. */}
           <span
-            className="pointer-events-none absolute inset-x-0 -bottom-[0.5px] h-px bg-surface"
+            className="pointer-events-none absolute inset-x-0 -bottom-[0.5px] h-px bg-panel"
             aria-hidden="true"
           />
           <svg

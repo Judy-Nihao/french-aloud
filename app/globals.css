@@ -4,14 +4,17 @@
 @theme inline {
   --font-heading: var(--font-baskervville), Georgia, serif;
   --font-sans: system-ui, sans-serif;
-  --color-canvas: oklch(0.946 0.002 270);
-  --color-surface: oklch(0.989 0.002 95);
+  --color-canvas: oklch(0.945 0.006 285);
+  --color-panel: oklch(0.982 0.003 285);
+  --color-glow-blue: oklch(0.53 0.2 260 / 0.85);
+  --color-glow-cyan: oklch(0.8 0.14 215 / 0.8);
+  --color-surface: oklch(0.994 0.002 95);
   --color-hover: oklch(0.955 0 0);
   --color-soft: oklch(0.925 0 0);
-  --color-border: oklch(0.62 0.004 270);
-  --color-border-control: oklch(0.49 0.004 270);
+  --color-border: oklch(0.875 0.006 285);
+  --color-border-control: oklch(0.76 0.008 285);
   --color-border-active: oklch(0.245 0.003 270);
-  --color-focus: oklch(0.47 0.12 290);
+  --color-focus: oklch(0.5 0.008 285);
   --color-placeholder: oklch(0.49 0.004 270);
   --color-muted: oklch(0.49 0.004 270);
   --color-secondary: oklch(0.46 0.004 270);
@@ -19,7 +22,7 @@
   --color-strong: oklch(0.245 0.003 270);
   --color-ink: oklch(0.245 0.003 270);
   --color-primary-hover: oklch(0.34 0.006 270);
-  --color-control-surface: oklch(0.982 0 0);
+  --color-control-surface: oklch(0.97 0.004 285);
   --color-control-hover: var(--color-canvas);
   --color-control-soft: oklch(0.925 0 0);
   --color-control-border: oklch(0.9 0 0);
@@ -51,7 +54,9 @@
   --color-male-surface: var(--color-sky-50);
   --color-male-selected: var(--color-sky-800);
   --shadow-control: 0 1px 2px oklch(0.245 0.003 270 / 0.04);
-  --shadow-panel: 0 2px 6px oklch(0.245 0.003 270 / 0.025);
+  --shadow-panel:
+    0 18px 60px -18px oklch(0.25 0.015 285 / 0.14),
+    0 3px 12px oklch(0.25 0.015 285 / 0.035);
   --shadow-drawer: 0 4px 16px oklch(0.245 0.003 270 / 0.06);
   --radius-panel: 1.5rem;
   --radius-section: 1rem;
@@ -130,4 +135,30 @@ body {
   .reading-drawer-backdrop {
     transition: none;
   }
+}
+
+/* Offset blue and cyan color clouds leave the reading surface clear. */
+.reader-canvas {
+  background-image:
+    radial-gradient(
+      ellipse 14rem 20rem at 12% 8rem,
+      var(--color-glow-blue),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 20rem 13rem at 2% 15rem,
+      var(--color-glow-cyan),
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 13rem 18rem at 98% 30rem,
+      var(--color-glow-blue),
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 19rem 14rem at 94% 36rem,
+      var(--color-glow-cyan),
+      transparent 80%
+    );
+  background-repeat: no-repeat;
 }

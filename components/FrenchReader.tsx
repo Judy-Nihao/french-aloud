@@ -22,9 +22,12 @@ const voiceGroups: Array<{
   labelClassName: string;
   selectedClassName: string;
   selectedLabelClassName: string;
+  selectedControlClassName: string;
   placeholder: string;
 }> = [
   {
+    selectedControlClassName:
+      "border-female-border focus:border-female-selected focus:ring-female-label",
     gender: "female",
     label: "Female voices",
     labelClassName: "bg-female-label text-female-ink",
@@ -33,6 +36,8 @@ const voiceGroups: Array<{
     placeholder: "Choose a female voice",
   },
   {
+    selectedControlClassName:
+      "border-male-border focus:border-male-selected focus:ring-male-label",
     gender: "male",
     label: "Male voices",
     labelClassName: "bg-male-label text-male-ink",
@@ -129,7 +134,7 @@ export const FrenchReader = () => {
             ref={editorRef}
             aria-label="French text"
             id="french-text"
-            className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border-control bg-surface px-4 py-4 leading-8 text-ink outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft md:text-lg"
+            className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border bg-surface px-4 py-4 leading-8 text-ink shadow-control outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft md:text-lg"
             placeholder="Type or paste French text…"
             rows={4}
             value={text}
@@ -198,10 +203,10 @@ export const FrenchReader = () => {
                   <div className="relative">
                     <select
                       id={selectId}
-                      className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-control-surface px-4 py-3 pr-11 font-medium text-control-ink transition-colors duration-150 outline-none hover:bg-control-hover focus:border-control-focus focus:ring-2 focus:ring-control-soft md:text-sm ${
+                      className={`min-h-12 w-full cursor-pointer appearance-none rounded-lg border bg-control-surface px-4 py-3 pr-11 font-medium text-control-ink transition-colors duration-150 outline-none hover:bg-control-hover focus:ring-2 md:text-sm ${
                         isSelected
-                          ? "border-control-focus"
-                          : "border-control-outline"
+                          ? group.selectedControlClassName
+                          : "border-control-outline focus:border-control-focus focus:ring-control-soft"
                       }`}
                       value={selectedGroupVoice ?? ""}
                       onChange={(event) => {
