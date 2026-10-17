@@ -1,6 +1,7 @@
 "use client";
 
-import { AudioLines, Volume2, X } from "lucide-react";
+import { Volume2, X } from "lucide-react";
+import { AudioLinesIcon } from "@/components/AudioLinesIcon";
 import { useSpeechPlayback } from "@/components/useSpeechPlayback";
 
 type PlayAudioButtonProps = {
@@ -34,8 +35,7 @@ export const PlayAudioButton = ({
     onPlaybackStart,
   });
   const busy = state !== "idle";
-  const ActionIcon =
-    state === "loading" ? X : state === "playing" ? AudioLines : Volume2;
+  const ActionIcon = state === "loading" ? X : Volume2;
   const handleClick = () => {
     if (busy) {
       stop();
@@ -59,7 +59,11 @@ export const PlayAudioButton = ({
       onClick={handleClick}
       disabled={disabled && !busy}
     >
-      <ActionIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
+      {state === "playing" ? (
+        <AudioLinesIcon />
+      ) : (
+        <ActionIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
+      )}
       {state === "loading"
         ? "Cancel"
         : state === "playing"

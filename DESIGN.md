@@ -97,8 +97,9 @@ full-flow explanation below the title.
 ## Interaction states
 
 - Play action icons: `Volume2` with `Read aloud`, `X` with `Cancel` while
-  generating, and static `AudioLines` with `Stop` while playing. Place the 20 px
-  icon before the text with an 8 px gap. Icons are decorative (`aria-hidden`);
+  generating, and animated `AudioLinesIcon` with `Stop` while playing. Place the 20 px
+  icon before the text with an 8 px gap. The audio lines loop only during playback, with static lines for reduced motion.
+  Icons are decorative (`aria-hidden`);
   visible text supplies the accessible button name.
 - Primary play button: ink background, surface text, lighter hover. Playing uses
   success green with a darker hover. Disabled
