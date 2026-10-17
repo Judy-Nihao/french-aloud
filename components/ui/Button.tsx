@@ -47,12 +47,6 @@ export function Button({
               d="M0 44 C38 44 26 0 52 0 H236 Q260 0 260 24 V44 Z"
               className="fill-tab transition-colors duration-150 group-enabled:group-hover:fill-tab-hover group-enabled:group-active:fill-tab-active motion-reduce:transition-none"
             />
-            <path
-              d="M0 44 C38 44 26 0 52 0 H236 Q260 0 260 24 V44"
-              className="fill-none stroke-border"
-              strokeWidth="1"
-              vectorEffect="non-scaling-stroke"
-            />
           </svg>
           <span className="relative z-20">{children}</span>
         </>
