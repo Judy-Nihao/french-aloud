@@ -89,7 +89,15 @@ export const FrenchReader = () => {
     <>
       <header>
         <div>
-          <h1 className="text-left font-heading text-4xl leading-tight font-bold tracking-tight text-ink italic md:text-[2.75rem]">
+          <h1 className="relative isolate inline-block max-w-full py-3 pr-7 pl-4 text-left font-heading text-4xl leading-tight font-bold tracking-tight text-ink italic md:py-4 md:pr-10 md:pl-5 md:text-[2.75rem]">
+            <svg
+              className="pointer-events-none absolute inset-0 -z-10 h-full w-full fill-heading-accent"
+              viewBox="0 0 400 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path d="M30 25 C95 22 260 2 340 2 C374 2 398 22 398 50 C398 78 374 98 340 98 C260 98 95 78 30 75 C13 74 2 64 2 50 C2 36 13 26 30 25 Z" />
+            </svg>
             French Aloud
           </h1>
           <div className="absolute -top-11 right-[-0.5px] translate-y-[-0.5px]">
@@ -113,7 +121,7 @@ export const FrenchReader = () => {
           </div>
         </div>
       </header>
-      <section className="mt-5">
+      <section className="mt-3">
         <div className="grid gap-2">
           <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2">
             <CopyTextButton key={text} text={text} />

@@ -5,6 +5,7 @@
   --font-heading: var(--font-plus-jakarta-sans), system-ui, sans-serif;
   --font-sans: system-ui, sans-serif;
   --color-canvas: oklch(0.945 0.006 285);
+  --color-heading-accent: oklch(0.89 0.18 95);
   --color-panel: oklch(0.982 0.003 285);
   --color-glow-blue: oklch(0.53 0.2 260 / 0.85);
   --color-glow-cyan: oklch(0.8 0.14 215 / 0.8);
