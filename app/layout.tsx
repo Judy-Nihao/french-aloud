@@ -1,13 +1,13 @@
-import { Baskervville } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 
-const headingFont = Baskervville({
+const headingFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: "600",
-  style: "normal",
+  weight: "700",
+  style: "italic",
   display: "swap",
-  variable: "--font-baskervville",
+  variable: "--font-plus-jakarta-sans",
 });
 
 export const metadata: Metadata = {

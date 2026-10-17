@@ -2,7 +2,7 @@
 
 /* Shared visual values. Keep component layout in Tailwind className. */
 @theme inline {
-  --font-heading: var(--font-baskervville), Georgia, serif;
+  --font-heading: var(--font-plus-jakarta-sans), system-ui, sans-serif;
   --font-sans: system-ui, sans-serif;
   --color-canvas: oklch(0.945 0.006 285);
   --color-panel: oklch(0.982 0.003 285);

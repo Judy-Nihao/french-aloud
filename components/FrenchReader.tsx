@@ -89,7 +89,7 @@ export const FrenchReader = () => {
     <>
       <header>
         <div>
-          <h1 className="text-center font-heading text-4xl leading-tight font-semibold tracking-tight text-ink md:text-[2.75rem]">
+          <h1 className="text-left font-heading text-4xl leading-tight font-bold tracking-tight text-ink italic md:text-[2.75rem]">
             French Aloud
           </h1>
           <div className="absolute -top-11 right-[-0.5px] translate-y-[-0.5px]">
