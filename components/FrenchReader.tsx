@@ -143,7 +143,7 @@ export const FrenchReader = () => {
             aria-label="French text"
             id="french-text"
             className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border bg-surface px-4 py-4 leading-8 text-ink shadow-control outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft md:text-lg"
-            placeholder="Type or paste French text…"
+            placeholder="Type or paste a French phrase…"
             rows={4}
             value={text}
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
