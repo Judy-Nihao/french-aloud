@@ -5,10 +5,10 @@
   --font-heading: var(--font-plus-jakarta-sans), system-ui, sans-serif;
   --font-sans: system-ui, sans-serif;
   --color-canvas: oklch(0.945 0.006 285);
-  --color-heading-accent: oklch(0.89 0.18 95);
   --color-panel: oklch(0.982 0.003 285);
-  --color-glow-blue: oklch(0.53 0.2 260 / 0.85);
-  --color-glow-cyan: oklch(0.8 0.14 215 / 0.8);
+  --color-heading-accent: oklch(0.89 0.18 95);
+  --color-glow-gold: oklch(0.83 0.165 80 / 0.8);
+  --color-glow-yellow: oklch(0.95 0.17 105 / 0.85);
   --color-surface: oklch(0.994 0.002 95);
   --color-hover: oklch(0.955 0 0);
   --color-soft: oklch(0.925 0 0);
@@ -138,28 +138,28 @@ body {
   }
 }
 
-/* Offset blue and cyan color clouds leave the reading surface clear. */
+/* Offset narrow gold cores and wider lemon edges create local brushed color. */
 .reader-canvas {
   background-image:
     radial-gradient(
-      ellipse 14rem 20rem at 12% 8rem,
-      var(--color-glow-blue),
-      transparent 75%
-    ),
-    radial-gradient(
-      ellipse 20rem 13rem at 2% 15rem,
-      var(--color-glow-cyan),
+      ellipse clamp(14rem, 23vw, 25rem) 25rem at 4% 9rem,
+      var(--color-glow-gold) 5%,
       transparent 78%
     ),
     radial-gradient(
-      ellipse 13rem 18rem at 98% 30rem,
-      var(--color-glow-blue),
-      transparent 78%
-    ),
-    radial-gradient(
-      ellipse 19rem 14rem at 94% 36rem,
-      var(--color-glow-cyan),
+      ellipse clamp(23rem, 38vw, 42rem) 22rem at 10% 17rem,
+      var(--color-glow-yellow) 8%,
       transparent 80%
+    ),
+    radial-gradient(
+      ellipse clamp(13rem, 22vw, 24rem) 24rem at 97% 29rem,
+      var(--color-glow-gold) 5%,
+      transparent 80%
+    ),
+    radial-gradient(
+      ellipse clamp(22rem, 36vw, 40rem) 20rem at 92% 37rem,
+      var(--color-glow-yellow) 8%,
+      transparent 82%
     );
   background-repeat: no-repeat;
 }
