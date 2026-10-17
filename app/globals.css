@@ -35,11 +35,9 @@
   --color-control-ink: var(--color-ink);
   --color-control-dot: var(--color-muted);
   --color-tab: oklch(0.915 0 0);
-  --color-tab-hover: oklch(0.88 0.055 250);
-  --color-tab-active: oklch(0.81 0.085 250);
+  --color-tab-hover: oklch(0.875 0 0);
+  --color-tab-active: oklch(0.825 0 0);
   --color-brand: oklch(0.71 0.15 295);
-  --color-selection: oklch(0.84 0.17 85);
-  --color-selection-soft: oklch(0.977 0.025 85);
   --color-playing: oklch(0.38 0.09 255);
   --color-playing-hover: oklch(0.44 0.1 255);
   --color-playing-active: oklch(0.32 0.08 255);
@@ -55,6 +53,7 @@
   --color-male-surface: var(--color-sky-50);
   --color-male-selected: var(--color-sky-800);
   --shadow-control: 0 1px 2px oklch(0.245 0.003 270 / 0.04);
+  --shadow-selection: 0 4px 12px -3px oklch(0.25 0.008 270 / 0.16);
   --shadow-panel:
     0 18px 60px -18px oklch(0.25 0.015 285 / 0.14),
     0 3px 12px oklch(0.25 0.015 285 / 0.035);
