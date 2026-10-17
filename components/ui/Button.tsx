@@ -6,7 +6,7 @@ type ButtonProps = ComponentProps<"button"> & {
 
 const variants = {
   quiet:
-    "min-h-11 transition-colors rounded-lg px-3 py-2 md:text-sm font-medium text-secondary hover:bg-hover disabled:opacity-40",
+    "min-h-11 transition-[color,background-color,transform] duration-150 rounded-lg px-3 py-2 md:text-sm font-medium text-secondary enabled:hover:bg-hover enabled:hover:text-strong enabled:active:bg-soft enabled:active:text-ink enabled:active:translate-y-px motion-reduce:transform-none disabled:opacity-40",
   icon: "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-hover hover:text-strong",
   "icon-circle":
     "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-control bg-surface text-secondary shadow-control transition-colors hover:border-border-active hover:bg-hover hover:text-strong",

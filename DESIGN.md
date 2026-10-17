@@ -58,13 +58,13 @@ and control-soft (0.925) backgrounds rather than an earth-colored badge.
 - UI family: `system-ui, sans-serif`. Brand title: self-hosted Baskervville SemiBold
   via next/font/google, with Georgia fallback. Next.js downloads fonts at build
   time and serves them from the application; browsers do not contact Google.
-- Main title: centered, 48 px mobile and 60 px at md and above, 600
+- Main title: centered, 36 px mobile and 44 px at md and above, 600
   weight and natural letter spacing. Drawer title: inherited mobile size, 20 px at md, medium weight.
 - French editor: inherited mobile size, 18 px at md, 32 px line height. History
   French: inherited mobile size, 16 px at md, 28 px line height.
 - Supporting text: inherited mobile size, 14–16 px at md. Keep French letter spacing normal.
 - Main shell: max width 48 rem; padding 20 px mobile and 40 px from the md
-  breakpoint. Header-to-editor section gap: 36 px mobile and 40 px desktop.
+  breakpoint. Header-to-editor toolbar gap: 20 px. Copy and Clear sit at the right with a 16 px gap; the editor follows 8 px below.
 - Recent readings is a neutral-gray tab attached above the panel flush with its right edge.
   Page top padding reserves its height. Voice groups become two columns at the
   md breakpoint.
@@ -83,15 +83,15 @@ and control-soft (0.925) backgrounds rather than an earth-colored badge.
 
 ```text
 Title + Recent readings
-  -> French text label + Copy
-  -> Editor with prefilled French
+  -> Right-aligned Copy + Clear
+  -> Empty editor with placeholder
   -> Read aloud
   -> Voice selection
   -> Playback speed
 ```
 
-Keep the visible `French text` label. The editor retains its prefilled French;
-`Type or paste French text…` appears only when empty. Do not add a redundant
+Use an accessible `French text` label without a visible heading. The editor starts empty and displays
+`Type or paste French text…` as its placeholder. Do not add a redundant
 full-flow explanation below the title.
 
 ## Interaction states
@@ -103,7 +103,8 @@ full-flow explanation below the title.
 - Primary play button: ink background, surface text, lighter hover. Playing uses
   success green with a darker hover. Disabled
   state uses the control border background and secondary text.
-- Shared quiet/icon buttons: hover background and visible keyboard focus.
+- Shared quiet buttons: darker text and a light background on hover; a deeper background and 1 px downward press on active. Disabled buttons have no hover or press feedback. Clear empties the editor, cancels playback and returns focus to the editor.
+- Shared icon buttons: hover background and visible keyboard focus.
 - Recent readings trigger: neutral-gray tab with a curved left shoulder that joins the panel top edge. A decorative SVG supplies the
   silhouette and fine outline without a bottom border. Keep a 44 px minimum
   height and leave panel overflow visible.

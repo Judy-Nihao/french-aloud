@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import { PlayAudioButton } from "@/components/PlayAudioButton";
 import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
+import { Button } from "@/components/ui/Button";
 import { CopyTextButton } from "@/components/CopyTextButton";
 import { RecentReadings } from "@/components/RecentReadings";
 import {
@@ -42,9 +43,8 @@ const voiceGroups: Array<{
 ];
 
 export const FrenchReader = () => {
-  const [text, setText] = useState(
-    "J’apprends le français parce que j’aime trop comment ça sonne.",
-  );
+  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const [text, setText] = useState("");
   const [selectedVoiceId, setSelectedVoiceId] = useState(defaultVoiceId);
   const [statusMessage, setStatusMessage] = useState("");
   const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
@@ -83,8 +83,8 @@ export const FrenchReader = () => {
   return (
     <>
       <header>
-        <div className="pt-5 md:pt-3">
-          <h1 className="text-center font-heading text-5xl leading-tight font-semibold text-ink md:text-6xl">
+        <div>
+          <h1 className="text-center font-heading text-4xl leading-tight font-semibold tracking-tight text-ink md:text-[2.75rem]">
             French Aloud
           </h1>
           <div className="absolute -top-11 right-[-0.5px] translate-y-[-0.5px]">
@@ -108,18 +108,25 @@ export const FrenchReader = () => {
           </div>
         </div>
       </header>
-      <section className="mt-9 md:mt-10">
-        <div className="grid gap-3">
-          <div className="flex items-center justify-between gap-3">
-            <label
-              className="font-medium text-body md:text-sm"
-              htmlFor="french-text"
+      <section className="mt-5">
+        <div className="grid gap-2">
+          <div className="flex items-center justify-end gap-4">
+            <CopyTextButton key={text} text={text} />
+            <Button
+              disabled={!text}
+              onClick={() => {
+                setText("");
+                setStatusMessage("");
+                setCacheStatus(null);
+                editorRef.current?.focus();
+              }}
             >
-              French text
-            </label>
-            <CopyTextButton text={text} />
+              Clear
+            </Button>
           </div>
           <textarea
+            ref={editorRef}
+            aria-label="French text"
             id="french-text"
             className="field-sizing-content min-h-32 w-full resize-y overflow-y-auto rounded-control border border-border-control bg-surface px-4 py-4 leading-8 text-ink outline-none placeholder:text-placeholder focus:border-muted focus:ring-4 focus:ring-soft md:text-lg"
             placeholder="Type or paste French text…"
