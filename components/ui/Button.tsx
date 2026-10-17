@@ -43,7 +43,7 @@ export function Button({
           >
             <path
               d="M0 44 C38 44 26 0 52 0 H236 Q260 0 260 24 V44 Z"
-              className="fill-tab transition-opacity group-hover:opacity-80 motion-reduce:transition-none"
+              className="fill-tab transition-colors duration-150 group-enabled:group-hover:fill-tab-hover group-enabled:group-active:fill-tab-active motion-reduce:transition-none"
             />
             <path
               d="M0 44 C38 44 26 0 52 0 H236 Q260 0 260 24 V44"

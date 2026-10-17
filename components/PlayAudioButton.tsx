@@ -1,6 +1,6 @@
 "use client";
 
-import { Square, Volume2, X } from "lucide-react";
+import { AudioLines, Volume2, X } from "lucide-react";
 import { useSpeechPlayback } from "@/components/useSpeechPlayback";
 
 type PlayAudioButtonProps = {
@@ -35,7 +35,7 @@ export const PlayAudioButton = ({
   });
   const busy = state !== "idle";
   const ActionIcon =
-    state === "loading" ? X : state === "playing" ? Square : Volume2;
+    state === "loading" ? X : state === "playing" ? AudioLines : Volume2;
   const handleClick = () => {
     if (busy) {
       stop();
@@ -63,7 +63,7 @@ export const PlayAudioButton = ({
       {state === "loading"
         ? "Cancel"
         : state === "playing"
-          ? "Stop playback"
+          ? "Stop"
           : "Read aloud"}
     </button>
   );

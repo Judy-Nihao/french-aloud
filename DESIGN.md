@@ -97,7 +97,7 @@ full-flow explanation below the title.
 ## Interaction states
 
 - Play action icons: `Volume2` with `Read aloud`, `X` with `Cancel` while
-  generating, and `Square` with `Stop playback` while playing. Place the 20 px
+  generating, and static `AudioLines` with `Stop` while playing. Place the 20 px
   icon before the text with an 8 px gap. Icons are decorative (`aria-hidden`);
   visible text supplies the accessible button name.
 - Primary play button: ink background, surface text, lighter hover. Playing uses
@@ -108,6 +108,8 @@ full-flow explanation below the title.
 - Recent readings trigger: neutral-gray tab with a curved left shoulder that joins the panel top edge. A decorative SVG supplies the
   silhouette and fine outline without a bottom border. Keep a 44 px minimum
   height and leave panel overflow visible.
+  Its fill darkens on hover and deepens while pressed, using tab-hover and
+  tab-active tokens. Keep its position fixed so the panel join stays intact.
 - History cards: surface background and faint border by default; hover darkens
   background and border; selected uses the active border and selection-soft background.
   Pressed uses soft background. Do not fade the whole card or its French text.
