@@ -55,7 +55,7 @@ export const PlayAudioButton = ({
     <button
       type="button"
       data-playing={state === "playing" ? "true" : undefined}
-      className="mt-6 flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-control bg-ink px-4 py-3 font-medium text-surface transition-colors duration-200 hover:bg-primary-hover focus-visible:ring-4 focus-visible:ring-border-control focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-border-control disabled:text-secondary data-[playing=true]:bg-success data-[playing=true]:hover:bg-success-hover motion-reduce:transition-none md:text-sm"
+      className="mt-6 flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-control bg-ink px-4 py-3 font-medium text-surface transition-colors duration-200 hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-panel focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-border-control disabled:text-secondary data-[playing=true]:bg-playing data-[playing=true]:hover:bg-playing-hover data-[playing=true]:active:bg-playing-active motion-reduce:transition-none md:text-sm"
       onClick={handleClick}
       disabled={disabled && !busy}
     >
