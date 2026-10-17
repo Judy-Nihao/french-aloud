@@ -31,9 +31,6 @@
   --color-control-strong: var(--color-strong);
   --color-control-ink: var(--color-ink);
   --color-control-dot: var(--color-muted);
-  --color-danger-hover: oklch(0.96 0.02 25);
-  --color-danger-active: oklch(0.91 0.04 25);
-  --color-danger-ink: oklch(0.43 0.15 25);
   --color-tab: oklch(0.945 0 0);
   --color-tab-hover: oklch(0.915 0 0);
   --color-tab-active: oklch(0.875 0 0);

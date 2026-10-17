@@ -1,23 +1,14 @@
 import type { ComponentProps } from "react";
 
 type ButtonProps = ComponentProps<"button"> & {
-  variant?:
-    | "quiet"
-    | "secondary"
-    | "danger-quiet"
-    | "icon"
-    | "icon-circle"
-    | "pill"
-    | "tab";
+  variant?: "quiet" | "secondary" | "icon" | "icon-circle" | "pill" | "tab";
 };
 
 const variants = {
   secondary:
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border bg-hover px-3 py-2 text-ink font-medium transition-[color,background-color,transform] duration-150 enabled:hover:bg-soft enabled:hover:border-border-active enabled:active:bg-border/30 enabled:active:translate-y-px disabled:opacity-40 motion-reduce:transform-none md:text-sm",
-  "danger-quiet":
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 py-2 text-secondary font-medium transition-[color,background-color,transform] duration-150 enabled:hover:bg-danger-hover enabled:hover:text-danger-ink enabled:active:bg-danger-active enabled:active:text-danger-ink enabled:active:translate-y-px disabled:opacity-40 motion-reduce:transform-none md:text-sm",
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-hover px-4 py-2 text-sm text-ink font-medium transition-[color,background-color,transform] duration-150 enabled:hover:bg-soft enabled:active:bg-border/30 enabled:active:translate-y-px disabled:opacity-40 motion-reduce:transform-none md:text-sm",
   quiet:
-    "min-h-11 transition-[color,background-color,transform] duration-150 rounded-lg px-3 py-2 md:text-sm font-medium text-secondary enabled:hover:bg-hover enabled:hover:text-strong enabled:active:bg-soft enabled:active:text-ink enabled:active:translate-y-px motion-reduce:transform-none disabled:opacity-40",
+    "inline-flex min-h-11 items-center justify-center gap-2 transition-[color,background-color,transform] duration-150 rounded-full px-3 py-2 text-sm font-medium text-secondary enabled:hover:bg-hover enabled:hover:text-strong enabled:active:bg-soft enabled:active:text-ink enabled:active:translate-y-px motion-reduce:transform-none disabled:opacity-40",
   icon: "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-hover hover:text-strong",
   "icon-circle":
     "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-control bg-surface text-secondary shadow-control transition-colors hover:border-border-active hover:bg-hover hover:text-strong",

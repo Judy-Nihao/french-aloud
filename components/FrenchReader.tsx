@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { ChevronDown, Eraser, Undo2 } from "lucide-react";
+import { ChevronDown, Eraser } from "lucide-react";
 import { PlayAudioButton } from "@/components/PlayAudioButton";
 import { SpeechSpeedControl } from "@/components/SpeechSpeedControl";
 import { Button } from "@/components/ui/Button";
@@ -45,13 +45,6 @@ const voiceGroups: Array<{
 export const FrenchReader = () => {
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState("");
-  const [clearedText, setClearedText] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (clearedText === null) return;
-    const timer = setTimeout(() => setClearedText(null), 8000);
-    return () => clearTimeout(timer);
-  }, [clearedText]);
   const [selectedVoiceId, setSelectedVoiceId] = useState(defaultVoiceId);
   const [statusMessage, setStatusMessage] = useState("");
   const [cacheStatus, setCacheStatus] = useState<"hit" | "miss" | null>(null);
@@ -107,7 +100,6 @@ export const FrenchReader = () => {
                 )
               }
               onRestore={(savedText) => {
-                setClearedText(null);
                 setText(savedText);
                 setStatusMessage("");
                 setCacheStatus(null);
@@ -118,33 +110,11 @@ export const FrenchReader = () => {
       </header>
       <section className="mt-5">
         <div className="grid gap-2">
-          <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
-            {clearedText !== null && (
-              <div className="mr-auto flex items-center gap-1">
-                <span role="status" className="text-secondary md:text-sm">
-                  Text cleared
-                </span>
-                <Button
-                  className="inline-flex items-center gap-1.5"
-                  onClick={() => {
-                    setText(clearedText);
-                    setClearedText(null);
-                    setStatusMessage("");
-                    setCacheStatus(null);
-                    editorRef.current?.focus();
-                  }}
-                >
-                  <Undo2 className="h-4 w-4" aria-hidden="true" />
-                  Undo
-                </Button>
-              </div>
-            )}
+          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2">
             <CopyTextButton key={text} text={text} />
             <Button
-              variant="danger-quiet"
               disabled={!text}
               onClick={() => {
-                setClearedText(text);
                 setText("");
                 setStatusMessage("");
                 setCacheStatus(null);
@@ -164,7 +134,6 @@ export const FrenchReader = () => {
             rows={4}
             value={text}
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-              setClearedText(null);
               setText(event.target.value);
               setStatusMessage("");
               setCacheStatus(null);
