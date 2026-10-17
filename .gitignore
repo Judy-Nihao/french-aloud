@@ -54,3 +54,6 @@ next-env.d.ts
 
 # private project notes (local only)
 /docs/private/
+/DESIGN.md
+/PRODUCT.md
+/docs/development.md
