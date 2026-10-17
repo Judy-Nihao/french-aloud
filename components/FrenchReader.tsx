@@ -91,7 +91,7 @@ export const FrenchReader = () => {
         <div>
           <h1 className="relative isolate inline-block max-w-full py-3 pr-7 pl-4 text-left font-heading text-4xl leading-tight font-bold tracking-tight text-ink italic md:py-4 md:pr-10 md:pl-5 md:text-[2.75rem]">
             <svg
-              className="pointer-events-none absolute inset-0 -z-10 h-full w-full fill-heading-accent"
+              className="pointer-events-none absolute inset-0 -z-10 h-full w-full mask-[linear-gradient(to_right,black_60%,rgb(0_0_0/0.85)_73%,rgb(0_0_0/0.35)_90%,transparent_100%)] fill-heading-accent"
               viewBox="0 0 400 100"
               preserveAspectRatio="none"
               aria-hidden="true"
