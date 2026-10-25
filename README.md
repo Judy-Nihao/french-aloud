@@ -18,6 +18,15 @@ ElevenLabs. Type or paste French text, choose a voice, and listen.
 
 Next.js, React, TypeScript, Tailwind CSS, and ElevenLabs.
 
+## Local development
+
+```sh
+nvm install
+nvm use
+npm ci
+npm run dev
+```
+
 ## ElevenLabs API
 
 French Aloud uses the ElevenLabs **Text to Speech** API to turn French text into
