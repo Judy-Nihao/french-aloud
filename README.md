@@ -3,7 +3,7 @@
 A simple tool for listening to French with natural-sounding voices, powered by
 ElevenLabs. Type or paste French text, choose a voice, and listen.
 
-[Try the live demo](https://french-aloud.vercel.app/)
+Try the live demo: https://french-aloud.judychen.dev
 
 ## Features
 
